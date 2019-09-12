@@ -27,7 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('static'));
 
 app.get('/', function (req, res) {
-    res.send('hello world');
+    // res.send('hello world');
+    res.render('index');
 });
 
 app.get('/people', function (req, res) {
@@ -52,13 +53,6 @@ app.get('/people', function (req, res) {
     res.send('people will go here');
 });
 
-app.get('/people/:id', function (req, res) {
-    if (people.length > 0) {
-        console.log(people[0]);
-    }
-    res.send("" + people.length);
-});
-
 app.post('/people', function (req, res) {
     let person = new Person();
     let contactInfo = JSON.stringify(person.contactInfo);
@@ -79,6 +73,15 @@ app.post('/people', function (req, res) {
     });
 
 });
+
+app.get('/people/:id', function (req, res) {
+    if (people.length > 0) {
+        console.log(people[0]);
+    }
+    res.send("" + people.length);
+});
+
+/******************************************************************/
 
 var useHttps = false;
 if (process.argv.length > 2) {
