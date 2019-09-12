@@ -2,7 +2,7 @@ var BallLayout = require('./BallLayout');
 var ContactInfo = require('./ContactInfo');
 
 const Handedness = {
-    LEFT: "letf",
+    LEFT: "left",
     RIGHT: "right"
 };
 
