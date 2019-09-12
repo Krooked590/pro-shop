@@ -28,14 +28,15 @@ app.use(express.static('static'));
 
 app.get('/', function (req, res) {
     // res.send('hello world');
-    res.render('index');
+    res.render('index', {people: people});
 });
 
 app.get('/people', function (req, res) {
     db.collection('people').get()
         .then((snapshot) => {
+            people = [];
             snapshot.forEach((doc) => {
-                //console.log(doc.id, '=>', doc.data());
+                // console.log(doc.id, '=>', doc.data());
                 let data = doc.data();
                 let person = new Person();
                 let contactInfo = JSON.parse(data.contactInfo);
@@ -45,12 +46,14 @@ app.get('/people', function (req, res) {
                 person.ballLayouts = ballLayouts;
                 people.push(person);
             });
+
+            res.render('index', { people: people });
         })
         .catch((err) => {
             console.log('Error getting documents', err);
         });
     
-    res.send('people will go here');
+    // res.send('people will go here');
 });
 
 app.post('/people', function (req, res) {
