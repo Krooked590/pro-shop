@@ -1,0 +1,21 @@
+<% include ./partials/header %>
+<h1>Create New Customer</h1>
+<form action="/customers" method="POST">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="customer[firstName]" placeholder="First Name" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="customer[lastName]" placeholder="Last Name">
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="number" id="phoneNumber" name="customer[phoneNumber]" placeholder="Phone Number" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="customer[email]" placeholder="example@email.com">
+
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="customer[notes]" id="notes" cols="30" rows="10" placeholder="Notes"></textarea>
+    <br>
+    <input type="submit">
+</form>
+<% include ./partials/footer %>

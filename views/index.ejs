@@ -1,8 +1,15 @@
-<% include partials/header %>
+<% include ./partials/header %>
 <h1>Mikes App!</h1>
-<ul id="people">
-    <% for(i = 0; i < people.length; i++) { %>
-        <li><%= people[i].contactInfo.firstName %></li>
-    <% } %>
+<a href="/customers/new">CREATE CUSTOMER</a>
+<ul id="customers">
+    <!-- <% for(i = 0; i < customers.length; i++) { %>
+        <li><%= customers[i].contactInfo.firstName %> <a href="/customers/<%= customers[i].id %>">inspect</a></li>
+    <% } %> -->
+
+    <% for(var key in customers) { %>
+        <% if (customers.hasOwnProperty(key)) { %>
+            <li><%= customers[key].contactInfo.firstName %> <a href="/customers/<%= customers[key].id %>">view</a></li>
+            <% } %>
+        <% } %>
 </ul>
-<% include partials/footer %>
+<% include ./partials/footer %>

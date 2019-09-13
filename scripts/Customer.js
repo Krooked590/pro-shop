@@ -6,14 +6,14 @@ const Handedness = {
     RIGHT: "right"
 };
 
-class Person {
+class Customer {
     constructor() {
         this.id = -1;
-        this.notes = "Test";
+        this.notes = "";
         this.contactInfo = new ContactInfo();
         this.ballLayouts = [new BallLayout()];
         this.handedness = Handedness.RIGHT;
     }
 }
 
-module.exports = Person;
+module.exports = Customer;
