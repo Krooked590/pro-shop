@@ -14,6 +14,19 @@ class Customer {
         this.ballLayouts = [new BallLayout()];
         this.handedness = Handedness.RIGHT;
     }
+
+    static buildCustomerFromDoc(doc) {
+        let data = doc.data();
+        let customer = new Customer();
+        let contactInfo = JSON.parse(data.contactInfo);
+        let ballLayouts = JSON.parse(data.layouts);
+
+        customer.id = doc.id;
+        customer.notes = data.notes;
+        customer.contactInfo = contactInfo;
+        customer.ballLayouts = ballLayouts;
+        return customer;
+    }
 }
 
 module.exports = Customer;

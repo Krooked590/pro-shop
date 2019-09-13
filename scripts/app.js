@@ -40,7 +40,7 @@ app.get('/customers', function (req, res) {
         .then((snapshot) => {
             customers = {};
             snapshot.forEach((doc) => {
-                customers[doc.id] = buildCustomerFromDoc(doc);
+                customers[doc.id] = Customer.buildCustomerFromDoc(doc);
             });
 
             res.render('index', { customers: customers });
@@ -72,7 +72,7 @@ app.post('/customers', function (req, res) {
     }).then(ref => {
         console.log('Created customer with id - ' + docRef.id);
         // res.send('200 - OK');
-        res.redirect('customers/' + docRef.id);
+        res.redirect('/customers/' + docRef.id);
     }).catch(err => {
         console.log('Error getting documents', err);
         res.send('300 - Error getting documents'); //no idea what code i should return so using 300 for now
@@ -90,9 +90,9 @@ app.get('/customers/:id', function (req, res) {
         .then(doc => {
             if (!doc.exists) {
                 console.log('No such document!');
-                res.redirect('customers');
+                res.redirect('/customers');
             } else {
-                let customer = buildCustomerFromDoc(doc);
+                let customer = Customer.buildCustomerFromDoc(doc);
                 console.log(customer);
                 res.render('show', { customer: customer });
             }
@@ -126,12 +126,12 @@ if (useHttps) {
     https.createServer(certOptions, app).listen(4443, () =>
     {
         console.log("starting server on port 4443...");
-        populateCustomers();
+        // populateCustomers();
     });
 } else {
     app.listen(3000, function () {
         console.log("starting server on port 3000..."); 
-        populateCustomers();
+        // populateCustomers();
     });
 }
 
@@ -156,15 +156,15 @@ function populateCustomers() {
         });
 }
 
-function buildCustomerFromDoc(doc) {
-    let data = doc.data();
-    let customer = new Customer();
-    let contactInfo = JSON.parse(data.contactInfo);
-    let ballLayouts = JSON.parse(data.layouts);
+// function buildCustomerFromDoc(doc) {
+//     let data = doc.data();
+//     let customer = new Customer();
+//     let contactInfo = JSON.parse(data.contactInfo);
+//     let ballLayouts = JSON.parse(data.layouts);
 
-    customer.id = doc.id;
-    customer.notes = data.notes;
-    customer.contactInfo = contactInfo;
-    customer.ballLayouts = ballLayouts;
-    return customer;
-}
+//     customer.id = doc.id;
+//     customer.notes = data.notes;
+//     customer.contactInfo = contactInfo;
+//     customer.ballLayouts = ballLayouts;
+//     return customer;
+// }
