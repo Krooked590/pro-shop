@@ -2,13 +2,12 @@
 <h1>Mikes App!</h1>
 <a href="/customers/new">CREATE CUSTOMER</a>
 <ul id="customers">
-    <!-- <% for(i = 0; i < customers.length; i++) { %>
-        <li><%= customers[i].contactInfo.firstName %> <a href="/customers/<%= customers[i].id %>">inspect</a></li>
-    <% } %> -->
-
     <% for(var key in customers) { %>
         <% if (customers.hasOwnProperty(key)) { %>
-            <li><%= customers[key].contactInfo.firstName %> <a href="/customers/<%= customers[key].id %>">view</a><a href="/customers/<%= customers[key].id %>/delete"> delete</a></li>
+            <li><%= customers[key].contactInfo.firstName %> <a href="/customers/<%= customers[key].id %>">view</a></li>
+            <form method="POST" action="/customers/<%= customers[key].id %>?_method=DELETE">
+                <button>Delete</button>
+            </form>
             <% } %>
         <% } %>
 </ul>

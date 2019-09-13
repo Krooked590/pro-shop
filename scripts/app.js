@@ -3,6 +3,7 @@ var fs = require('fs');
 var express = require('express');
 var https = require('https');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 var admin = require('firebase-admin');
 var serviceAccount = require('../service-account.json');
 var BallLayout = require('./BallLayout');
@@ -25,6 +26,7 @@ var customers = {};
 app.set("view engine", "ejs");
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(express.static('static'));
 
 app.get('/', function (req, res) {
@@ -75,7 +77,7 @@ app.post('/customers', function (req, res) {
         res.redirect('/customers/' + docRef.id);
     }).catch(err => {
         console.log('Error getting documents', err);
-        res.send('300 - Error getting documents'); //no idea what code i should return so using 300 for now
+        res.send('420 - Error getting documents'); //no idea what code i should return so using 300 for now
     });
 });
 
@@ -99,14 +101,14 @@ app.get('/customers/:id', function (req, res) {
         })
         .catch(err => {
             console.log('Error getting document', err);
+            res.redirect('/customers');
         });
 
     // res.render('show', { customer: customer });
 });
 
-app.get('/customers/:id/delete', function (req, res) {
+app.delete('/customers/:id', function (req, res) {
     let id = req.params.id;
-
     col.doc(id).delete();
     res.redirect('/customers');
 });
