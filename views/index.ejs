@@ -8,7 +8,7 @@
 
     <% for(var key in customers) { %>
         <% if (customers.hasOwnProperty(key)) { %>
-            <li><%= customers[key].contactInfo.firstName %> <a href="/customers/<%= customers[key].id %>">view</a></li>
+            <li><%= customers[key].contactInfo.firstName %> <a href="/customers/<%= customers[key].id %>">view</a><a href="/customers/<%= customers[key].id %>/delete"> delete</a></li>
             <% } %>
         <% } %>
 </ul>

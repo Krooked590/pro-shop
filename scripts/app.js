@@ -104,6 +104,13 @@ app.get('/customers/:id', function (req, res) {
     // res.render('show', { customer: customer });
 });
 
+app.get('/customers/:id/delete', function (req, res) {
+    let id = req.params.id;
+
+    col.doc(id).delete();
+    res.redirect('/customers');
+});
+
 /******************************************************************/
 
 var useHttps = false;
