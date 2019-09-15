@@ -1,6 +1,6 @@
 class BallLayout {
      constructor() {
-          this.ballName = "";
+          this.ballName = "Ball";
           this.middleForwardPitch = "0";
           this.middleSidePitchL = "0";
           this.middleSidePitchR = "0";

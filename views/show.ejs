@@ -1,5 +1,32 @@
 <% include ./partials/header %>
 <h1>Show Customer</h1>
 <a href="/customers">Back</a>
-<p><%= customer %></p>
+<p>Name: <%= customer.contactInfo.firstName %> <%= customer.contactInfo.lastName %></p>
+<p>Email: <%= customer.contactInfo.email %></p>
+<p>Phone Number: <%= customer.contactInfo.phoneNumber %></p>
+<hr>
+<h2>Ball Info:</h2>
+<p>Ball Name: <%= customer.ballLayouts[0].ballName %></p>
+<p>Middle Forward Pitch: <%= customer.ballLayouts[0].middleForwardPitch %></p>
+<p>Middle Side Pitch L: <%= customer.ballLayouts[0].middleSidePitchL %></p>
+<p>Middle Side Pitch R: <%= customer.ballLayouts[0].middleSidePitchR %></p>
+<p>Middle Reverse Pitch: <%= customer.ballLayouts[0].middleReversePitch %></p>
+<p>Middle Hole Size: <%= customer.ballLayouts[0].middleHoleSize %></p>
+<p>Middle Insert Size: <%= customer.ballLayouts[0].middleInsertSize %></p>
+<p>Ring Forward Pitch: <%= customer.ballLayouts[0].ringForwardPitch %></p>
+<p>Ring Side Pitch L: <%= customer.ballLayouts[0].ringSidePitchL %></p>
+<p>Ring Side Pitch R: <%= customer.ballLayouts[0].ringSidePitchR %></p>
+<p>Ring Reverse Pitch: <%= customer.ballLayouts[0].ringReversePitch %></p>
+<p>Ring Hole Size: <%= customer.ballLayouts[0].ringHoleSize %></p>
+<p>Ring Insert Size: <%= customer.ballLayouts[0].ringInsertSize %></p>
+<p>Bridge Spacing: <%= customer.ballLayouts[0].bridgeSpacing %></p>
+<p>Middle Actual: <%= customer.ballLayouts[0].middleActual %></p>
+<p>Middle Cut: <%= customer.ballLayouts[0].middleCut %></p>
+<p>Ring Actual: <%= customer.ballLayouts[0].ringActual %></p>
+<p>Ring Cut: <%= customer.ballLayouts[0].ringCut %></p>
+<p>Thumb Forward Pitch: <%= customer.ballLayouts[0].thumbForwardPitch %></p>
+<p>Thumb Reverse Pitch: <%= customer.ballLayouts[0].thumbReversePitch %></p>
+<p>Thumb Side Pitch L: <%= customer.ballLayouts[0].thumbSidePitchL %></p>
+<p>Thumb Side Pitch R: <%= customer.ballLayouts[0].thumbSidePitchR %></p>
+<p>Oval Angle: <%= customer.ballLayouts[0].ovalAngle %></p>
 <% include ./partials/footer %>

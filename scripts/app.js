@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var admin = require('firebase-admin');
 var serviceAccount = require('../service-account.json');
-var BallLayout = require('./BallLayout');
+// var BallLayout = require('./BallLayout');
 var Customer = require('./Customer');
 
 var certOptions = {
@@ -30,7 +30,7 @@ app.use(methodOverride('_method'));
 app.use(express.static('static'));
 
 app.get('/', function (req, res) {
-    res.render('index', {customers: customers});
+    res.redirect('/customers');
 });
 
 app.get('/test', (req, res) => {
@@ -61,6 +61,30 @@ app.post('/customers', function (req, res) {
     customer.contactInfo.phoneNumber = req.body.customer.phoneNumber;
     customer.contactInfo.email = req.body.customer.email;
     customer.notes = req.body.customer.notes;
+
+    customer.ballLayouts[0].ballName = req.body.layout.ballName;
+    customer.ballLayouts[0].middleForwardPitch = req.body.layout.middleForwardPitch;
+    customer.ballLayouts[0].middleSidePitchL = req.body.layout.middleSidePitchL;
+    customer.ballLayouts[0].middleSidePitchR = req.body.layout.middleSidePitchR;
+    customer.ballLayouts[0].middleReversePitch = req.body.layout.middleReversePitch;
+    customer.ballLayouts[0].middleHoleSize = req.body.layout.middleHoleSize;
+    customer.ballLayouts[0].middleInsertSize = req.body.layout.middleInsertSize;
+    customer.ballLayouts[0].ringForwardPitch = req.body.layout.ringForwardPitch;
+    customer.ballLayouts[0].ringSidePitchL = req.body.layout.ringSidePitchL;
+    customer.ballLayouts[0].ringSidePitchR = req.body.layout.ringSidePitchR;
+    customer.ballLayouts[0].ringReversePitch = req.body.layout.ringReversePitch;
+    customer.ballLayouts[0].ringHoleSize = req.body.layout.ringHoleSize;
+    customer.ballLayouts[0].ringInsertSize = req.body.layout.ringInsertSize;
+    customer.ballLayouts[0].bridgeSpacing = req.body.layout.bridgeSpacing;
+    customer.ballLayouts[0].middleActual = req.body.layout.middleActual;
+    customer.ballLayouts[0].middleCut = req.body.layout.middleCut;
+    customer.ballLayouts[0].ringActual = req.body.layout.ringActual;
+    customer.ballLayouts[0].ringCut = req.body.layout.ringCut;
+    customer.ballLayouts[0].thumbForwardPitch = req.body.layout.thumbForwardPitch;
+    customer.ballLayouts[0].thumbReversePitch = req.body.layout.thumbReversePitch;
+    customer.ballLayouts[0].thumbSidePitchL = req.body.layout.thumbSidePitchL;
+    customer.ballLayouts[0].thumbSidePitchR = req.body.layout.thumbSidePitchR;
+    customer.ballLayouts[0].ovalAngle = req.body.layout.ovalAngle;
 
     let contactInfo = JSON.stringify(customer.contactInfo);
     let layouts = JSON.stringify(customer.ballLayouts);
@@ -128,12 +152,10 @@ if (useHttps) {
     https.createServer(certOptions, app).listen(4443, () =>
     {
         console.log("starting server on port 4443...");
-        // populateCustomers();
     });
 } else {
     app.listen(3000, function () {
         console.log("starting server on port 3000..."); 
-        // populateCustomers();
     });
 }
 
@@ -157,16 +179,3 @@ function populateCustomers() {
             console.log('Error getting documents', err);
         });
 }
-
-// function buildCustomerFromDoc(doc) {
-//     let data = doc.data();
-//     let customer = new Customer();
-//     let contactInfo = JSON.parse(data.contactInfo);
-//     let ballLayouts = JSON.parse(data.layouts);
-
-//     customer.id = doc.id;
-//     customer.notes = data.notes;
-//     customer.contactInfo = contactInfo;
-//     customer.ballLayouts = ballLayouts;
-//     return customer;
-// }
