@@ -1,18 +1,10 @@
-var path = require('path');
-var fs = require('fs');
 var express = require('express');
-var https = require('https');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var admin = require('firebase-admin');
 // var BallLayout = require('./BallLayout');
 var Customer = require('./Customer');
 var serviceAccount = process.env.SERVICE_ACCOUNT || require('../service-account.json');
-
-var certOptions = {
-    key: fs.readFileSync(path.resolve('server.key')),
-    cert: fs.readFileSync(path.resolve('server.crt'))
-};
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -254,24 +246,10 @@ app.delete('/customers/:id', function (req, res) {
 /******************************************************************/
 
 var port = process.env.PORT || 3000;
-var useHttps = false;
-if (process.argv.length > 2) {
-    for (var i = 2; i < process.argv.length; i++) {
-        if (process.argv[i].toLowerCase() === "https") {
-            useHttps = true;
-        }
-    }
-}
 
-if (useHttps) {
-    https.createServer(certOptions, app).listen(4443, () => {
-        console.log("starting server on port 4443...");
-    });
-} else {
-    app.listen(port, function () {
-        console.log("starting server on port " + port + "...");
-    });
-}
+app.listen(port, function () {
+    console.log("starting server on port " + port + "...");
+});
 
 // function populateCustomers() {
 //     db.collection('customers').get()
