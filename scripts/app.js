@@ -269,7 +269,7 @@ if (useHttps) {
     });
 } else {
     app.listen(port, function () {
-        console.log("starting server on port 3000...");
+        console.log("starting server on port " + port + "...");
     });
 }
 
