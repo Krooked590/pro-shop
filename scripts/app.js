@@ -253,6 +253,7 @@ app.delete('/customers/:id', function (req, res) {
 
 /******************************************************************/
 
+var port = process.env.PORT || 3000;
 var useHttps = false;
 if (process.argv.length > 2) {
     for (var i = 2; i < process.argv.length; i++) {
@@ -267,7 +268,7 @@ if (useHttps) {
         console.log("starting server on port 4443...");
     });
 } else {
-    app.listen(3000, function () {
+    app.listen(port, function () {
         console.log("starting server on port 3000...");
     });
 }
