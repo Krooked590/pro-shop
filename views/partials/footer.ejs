@@ -1,14 +1,119 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
     crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
+
+<script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyAoCV0oDO19Lqlq_-CdxeXv8rmPfuv-kJI",
+        authDomain: "mikes-pro-shop.firebaseapp.com",
+        databaseURL: "https://mikes-pro-shop.firebaseio.com",
+        projectId: "mikes-pro-shop",
+        storageBucket: "mikes-pro-shop.appspot.com",
+        messagingSenderId: "432365187897",
+        appId: "1:432365187897:web:8b0d0a7619a9892b51eee8"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+</script>
+<script type="text/javascript">
+    /**
+     * Function called when clicking the Login/Logout button.
+     */
+    function toggleSignIn() {
+        if (!firebase.auth().currentUser) {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('https://www.googleapis.com/auth/plus.login');
+            firebase.auth().signInWithRedirect(provider);
+        } else {
+            firebase.auth().signOut();
+        }
+    }
+
+    function initApp() {
+        // Result from Redirect auth flow.
+        firebase.auth().getRedirectResult().then(function (result) {
+            if (result.credential) {
+                // var token = result.credential.accessToken;
+                // document.getElementById('quickstart-oauthtoken').textContent = token;
+            } else {
+                // document.getElementById('quickstart-oauthtoken').textContent = 'null';
+            }
+
+            // var user = result.user;
+        }).catch(function (error) {
+            var errorCode = error.code;
+            if (errorCode === 'auth/account-exists-with-different-credential') {
+                alert('You have already signed up with a different auth provider for that email.');
+                // If you are using multiple auth providers on your app you should handle linking
+                // the user's accounts here.
+            } else {
+                console.error(error);
+            }
+        });
+        // Listening for auth state changes.
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                //window.location = '/test';
+                // test();
+            } else {
+                //window.location = '/login';
+            }
+        });
+    }
+    window.onload = function () {
+        initApp();
+    };
+
+    function test() {
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ false).then(function (idToken) {
+            // Send token to your backend via HTTPS
+            // ...
+            // console.log(idToken);
+            $.ajax({
+                url: '/test',
+                type: 'get',
+                dataType: 'html',
+                headers: { 'Authorization': idToken },
+                success: function (html) {
+                    // Insert the html into the page here using ".html(html)"
+                    // or a similar method.
+                    console.log('works');
+                    history.pushState({}, 'title', '/test');
+                    document.write(html);
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        }).catch(function (error) {
+            // Handle error
+        });
+    }
+
+    function login() {
+        console.log('clicked');
+        toggleSignIn();
+    }
+</script>
+
 </body>
 
 </html>

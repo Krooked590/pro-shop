@@ -1,0 +1,93 @@
+<% include ./partials/header %>
+<h1>Edit Customer</h1>
+<a href="/customers/<%= customer.id %>">Back</a>
+<a href="/customers">Home</a>
+<form action="/customers/<%= customer.id %>?_method=PUT" method="POST">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="customer[firstName]" placeholder="First Name" value="<%= customer.contactInfo.firstName %>" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="customer[lastName]" placeholder="Last Name" value="<%= customer.contactInfo.lastName %>">
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="number" id="phoneNumber" name="customer[phoneNumber]" placeholder="Phone Number" value="<%= customer.contactInfo.phoneNumber %>" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="customer[email]" placeholder="example@email.com" value="<%= customer.contactInfo.email %>">
+
+    <label for="notes">Notes:</label>
+    <textarea id="notes" name="customer[notes]" id="notes" cols="30" rows="10" placeholder="Notes"><%= customer.notes %></textarea>
+    <br>
+    <br>
+    <label for="ballName">Ball Name:</label>
+    <input type="text" id="ballName" name="layout[ballName]" value="<%= customer.ballLayouts[0].ballName %>">
+
+    <label for="middleForwardPitch">Middle Forward Pitch:</label>
+    <input type="text" id="middleForwardPitch" name="layout[middleForwardPitch]" value="<%= customer.ballLayouts[0].middleForwardPitch %>">
+
+    <label for="middleSidePitchL">Middle Side Pitch L:</label>
+    <input type="text" id="middleSidePitchL" name="layout[middleSidePitchL]" value="<%= customer.ballLayouts[0].middleSidePitchL %>">
+
+    <label for="middleSidePitchR">Middle Side Pitch R:</label>
+    <input type="text" id="middleSidePitchR" name="layout[middleSidePitchR]" value="<%= customer.ballLayouts[0].middleSidePitchR %>">
+
+    <label for="middleReversePitch">Middle Reverse Pitch:</label>
+    <input type="text" id="middleReversePitch" name="layout[middleReversePitch]" value="<%= customer.ballLayouts[0].middleReversePitch %>">
+
+    <label for="middleHoleSize">Middle Hole Size:</label>
+    <input type="text" id="middleHoleSize" name="layout[middleHoleSize]" value="<%= customer.ballLayouts[0].middleHoleSize %>">
+
+    <label for="middleInsertSize">Middle Insert Size:</label>
+    <input type="text" id="middleInsertSize" name="layout[middleInsertSize]" value="<%= customer.ballLayouts[0].middleInsertSize %>">
+
+    <label for="ringForwardPitch">Ring Forward Pitch:</label>
+    <input type="text" id="ringForwardPitch" name="layout[ringForwardPitch]" value="<%= customer.ballLayouts[0].ringForwardPitch %>">
+
+    <label for="ringSidePitchL">Ring Side Pitch L:</label>
+    <input type="text" id="ringSidePitchL" name="layout[ringSidePitchL]" value="<%= customer.ballLayouts[0].ringSidePitchL %>">
+
+    <label for="ringSidePitchR">Ring Side Pitch R:</label>
+    <input type="text" id="ringSidePitchR" name="layout[ringSidePitchR]" value="<%= customer.ballLayouts[0].ringSidePitchR %>">
+
+    <label for="ringReversePitch">Ring Reverse Pitch:</label>
+    <input type="text" id="ringReversePitch" name="layout[ringReversePitch]" value="<%= customer.ballLayouts[0].ringReversePitch %>">
+
+    <label for="ringHoleSize">Ring Hole Size:</label>
+    <input type="text" id="ringHoleSize" name="layout[ringHoleSize]" value="<%= customer.ballLayouts[0].ringHoleSize %>">
+
+    <label for="ringInsertSize">Ring Insert Size:</label>
+    <input type="text" id="ringInsertSize" name="layout[ringInsertSize]" value="<%= customer.ballLayouts[0].ringInsertSize %>">
+
+    <label for="bridgeSpacing">Bridge Spacing:</label>
+    <input type="text" id="bridgeSpacing" name="layout[bridgeSpacing]" value="<%= customer.ballLayouts[0].bridgeSpacing %>">
+
+    <label for="middleActual">Middle Actual:</label>
+    <input type="text" id="middleActual" name="layout[middleActual]" value="<%= customer.ballLayouts[0].middleActual %>">
+
+    <label for="middleCut">Middle Cut:</label>
+    <input type="text" id="middleCut" name="layout[middleCut]" value="<%= customer.ballLayouts[0].middleCut %>">
+
+    <label for="ringActual">Ring Actual:</label>
+    <input type="text" id="ringActual" name="layout[ringActual]" value="<%= customer.ballLayouts[0].ringActual %>">
+
+    <label for="ringCut">Ring Cut:</label>
+    <input type="text" id="ringCut" name="layout[ringCut]" value="<%= customer.ballLayouts[0].ringCut %>">
+
+    <label for="thumbForwardPitch">Thumb Forward Pitch:</label>
+    <input type="text" id="thumbForwardPitch" name="layout[thumbForwardPitch]" value="<%= customer.ballLayouts[0].thumbForwardPitch %>">
+
+    <label for="thumbReversePitch">Thumb Reverse Pitch:</label>
+    <input type="text" id="thumbReversePitch" name="layout[thumbReversePitch]" value="<%= customer.ballLayouts[0].thumbReversePitch %>">
+
+    <label for="thumbSidePitchL">Thumb Side Pitch L:</label>
+    <input type="text" id="thumbSidePitchL" name="layout[thumbSidePitchL]" value="<%= customer.ballLayouts[0].thumbSidePitchL %>">
+
+    <label for="thumbSidePitchR">Thumb Side Pitch R:</label>
+    <input type="text" id="thumbSidePitchR" name="layout[thumbSidePitchR]" value="<%= customer.ballLayouts[0].thumbSidePitchR %>">
+
+    <label for="ovalAngle">Oval Angle:</label>
+    <input type="text" id="ovalAngle" name="layout[ovalAngle]" value="<%= customer.ballLayouts[0].ovalAngle %>">
+
+    <input type="submit">
+</form>
+<% include ./partials/footer %>

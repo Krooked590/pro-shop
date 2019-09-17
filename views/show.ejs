@@ -1,9 +1,11 @@
 <% include ./partials/header %>
 <h1>Show Customer</h1>
-<a href="/customers">Back</a>
+<a href="/customers">Home</a>
+<a href="/customers/<%= customer.id %>/edit">Edit</a>
 <p>Name: <%= customer.contactInfo.firstName %> <%= customer.contactInfo.lastName %></p>
 <p>Email: <%= customer.contactInfo.email %></p>
 <p>Phone Number: <%= customer.contactInfo.phoneNumber %></p>
+<p>Notes: <%= customer.notes %></p>
 <hr>
 <h2>Ball Info:</h2>
 <p>Ball Name: <%= customer.ballLayouts[0].ballName %></p>
