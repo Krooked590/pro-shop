@@ -5,9 +5,9 @@ var https = require('https');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var admin = require('firebase-admin');
-var serviceAccount = require('../service-account.json');
 // var BallLayout = require('./BallLayout');
 var Customer = require('./Customer');
+var serviceAccount = process.env.SERVICE_ACCOUNT || require('../service-account.json');
 
 var certOptions = {
     key: fs.readFileSync(path.resolve('server.key')),
