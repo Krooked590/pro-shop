@@ -36,16 +36,30 @@ app.get('/', function (req, res) {
 
 app.get('/test', (req, res) => {
     let idToken = req.header('Authorization');
-    if (!idToken) res.redirect('/login');
-    admin.auth().verifyIdToken(idToken)
-        .then(function (decodedToken) {
-            let uid = decodedToken.uid;
-            res.send('<h1>LOGGED IN!</h1>');
-            // ...
-        }).catch(function (error) {
-            // Handle error
-            res.redirect('/login');
-        });
+    console.log('token - ' + idToken);
+    if (!idToken) {
+        res.redirect('/login');
+    } else {
+        admin.auth().verifyIdToken(idToken)
+            .then(function (decodedToken) {
+                let uid = decodedToken.uid;
+                admin.auth().getUser(uid)
+                    .then(function (userRecord) {
+                        // See the UserRecord reference doc for the contents of userRecord.
+                        let user = userRecord.toJSON();
+                        console.log('Successfully fetched user data:', user);
+                        res.send('<h1>LOGGED IN! ' + user.email + '</h1>');
+                    })
+                    .catch(function (error) {
+                        console.log('Error fetching user data:', error);
+                        res.redirect('/login');
+                    });
+                // ...
+            }).catch(function (error) {
+                // Handle error
+                res.redirect('/login');
+            });
+    }
 
     // console.log(req.header('authorization'));
     // res.render('test');

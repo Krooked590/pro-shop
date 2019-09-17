@@ -57,7 +57,7 @@
                 // document.getElementById('quickstart-oauthtoken').textContent = 'null';
             }
 
-            // var user = result.user;
+            var user = result.user;
         }).catch(function (error) {
             var errorCode = error.code;
             if (errorCode === 'auth/account-exists-with-different-credential') {
@@ -83,29 +83,33 @@
     };
 
     function test() {
-        firebase.auth().currentUser.getIdToken(/* forceRefresh */ false).then(function (idToken) {
-            // Send token to your backend via HTTPS
-            // ...
-            // console.log(idToken);
-            $.ajax({
-                url: '/test',
-                type: 'get',
-                dataType: 'html',
-                headers: { 'Authorization': idToken },
-                success: function (html) {
-                    // Insert the html into the page here using ".html(html)"
-                    // or a similar method.
-                    console.log('works');
-                    history.pushState({}, 'title', '/test');
-                    document.write(html);
-                },
-                error: function () {
-                    alert("Error");
-                }
+        if (firebase.auth().currentUser) {
+            firebase.auth().currentUser.getIdToken(/* forceRefresh */ false).then(function (idToken) {
+                // Send token to your backend via HTTPS
+                // ...
+                // console.log(idToken);
+                $.ajax({
+                    url: '/test',
+                    type: 'get',
+                    dataType: 'html',
+                    headers: { 'Authorization': idToken },
+                    success: function (html) {
+                        // Insert the html into the page here using ".html(html)"
+                        // or a similar method.
+                        console.log('works');
+                        history.pushState({}, 'title', '/test');
+                        document.write(html);
+                    },
+                    error: function () {
+                        alert("Error");
+                    }
+                });
+            }).catch(function (error) {
+                // Handle error
             });
-        }).catch(function (error) {
-            // Handle error
-        });
+        } else {
+            toggleSignIn();
+        }
     }
 
     function login() {
