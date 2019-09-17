@@ -2,12 +2,21 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var admin = require('firebase-admin');
+// var serviceAccount = require('../service-account.json');
 // var BallLayout = require('./BallLayout');
 var Customer = require('./Customer');
-var serviceAccount = process.env.SERVICE_ACCOUNT || require('../service-account.json');
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount)
+// });
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert({
+        "project_id": "mikes-pro-shop",
+        "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        "client_email": process.env.FIREBASE_CLIENT_EMAIL,
+    }),
+    databaseURL: "https://mikes-pro-shop.firebaseio.com"
 });
 
 var db = admin.firestore();
