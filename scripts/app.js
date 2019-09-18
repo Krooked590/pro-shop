@@ -92,7 +92,7 @@ app.get('/customers', (req, res) => {
                         customers[doc.id] = Customer.buildCustomerFromDoc(doc);
                     });
 
-                    isDirty = false;
+                    isDirty = true;
                     res.render('index', { customers: customers });
                 })
                 .catch((err) => {
