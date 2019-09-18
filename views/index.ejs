@@ -1,14 +1,12 @@
-<% include ./partials/header %>
 <h1>Mikes App!</h1>
-<a href="/customers/new">CREATE CUSTOMER</a>
+<button onclick="get('customers/new')">CREATE CUSTOMER</button>
 <ul id="customers">
     <% for(var key in customers) { %>
         <% if (customers.hasOwnProperty(key)) { %>
-            <li><%= customers[key].contactInfo.firstName %> <%= customers[key].contactInfo.lastName %> <a href="/customers/<%= customers[key].id %>">view</a></li>
-            <form method="POST" action="/customers/<%= customers[key].id %>?_method=DELETE">
+            <li><%= customers[key].contactInfo.firstName %> <%= customers[key].contactInfo.lastName %> <button onclick="get('customers/<%= customers[key].id %>')">View</button></li>
+            <!-- <form method="POST" action="/customers/<%= customers[key].id %>?_method=DELETE">
                 <button>Delete</button>
-            </form>
+            </form> -->
             <% } %>
         <% } %>
 </ul>
-<% include ./partials/footer %>

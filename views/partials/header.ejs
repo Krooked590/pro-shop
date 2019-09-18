@@ -9,6 +9,97 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAoCV0oDO19Lqlq_-CdxeXv8rmPfuv-kJI",
+            authDomain: "mikes-pro-shop.firebaseapp.com",
+            databaseURL: "https://mikes-pro-shop.firebaseio.com",
+            projectId: "mikes-pro-shop",
+            storageBucket: "mikes-pro-shop.appspot.com",
+            messagingSenderId: "432365187897",
+            appId: "1:432365187897:web:8b0d0a7619a9892b51eee8"
+        };
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+            // firebase.analytics();
+    </script>
+    <script>
+        function get(endpoint) {
+            if (firebase.auth().currentUser) {
+                firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+                    // Send token to backend and load response
+                    // console.log(idToken);
+                    $.ajax({
+                        url: "/" + endpoint,
+                        type: 'get',
+                        dataType: 'html',
+                        headers: { 'Authorization': idToken },
+                        success: function (html) {
+                            history.pushState({}, endpoint, "/" + endpoint);
+                            $("#content").html(html);
+                        },
+                        error: function () {
+                            alert("Error");
+                        }
+                    });
+                }).catch(function (error) {
+                    // Handle error
+                    console.log(error);
+                });
+            } else {
+                toggleSignIn();
+            }
+        }
+
+        function post(form) {
+            if (firebase.auth().currentUser) {
+                firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+                    // Send token to backend and load response
+                    // console.log(idToken);
+                    $(form).find('input[required]').each((index, element) => {
+                        if(!$(element).val()) {
+                            console.log("EMPTY!!!!!");
+                        }
+                    });
+                    let formData = $(form).serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: $(form).attr('action'),
+                        data: formData,
+                        headers: { "Authorization": idToken },
+                        success: (response) => {
+                            // console.log("success - " + response);
+                            get('customers'+response);
+                        },
+                        error: function () {
+                            alert("Error");
+                        }
+                    });
+                }).catch(function (error) {
+                    // Handle error
+                    console.log(error);
+                });
+            }
+        }
+    </script>
 
     <title>Mikes App!</title>
 </head>
@@ -20,7 +111,7 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -30,8 +121,8 @@
                     <a class="nav-link" href="#">Link</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -43,6 +134,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+                <li class="nav-item">
+                    <button class="btn" onclick="toggleSignIn()">Log Out</button>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">

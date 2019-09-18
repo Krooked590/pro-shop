@@ -1,6 +1,6 @@
-<% include ./partials/header %>
 <h1>Create New Customer</h1>
-<form action="/customers" method="POST">
+<button onclick="get('customers')">Home</button>
+<form id="createForm" action="/customers" method="POST">
     <label for="firstName">First Name:</label>
     <input type="text" id="firstName" name="customer[firstName]" placeholder="Required" required>
 
@@ -86,6 +86,6 @@
     <label for="ovalAngle">Oval Angle:</label>
     <input type="text" id="ovalAngle" name="layout[ovalAngle]">
 
-    <input type="submit">
+    <!-- <input type="submit"> -->
+    <button type="button" onclick="post(document.getElementById('createForm'))">Submit</button>
 </form>
-<% include ./partials/footer %>

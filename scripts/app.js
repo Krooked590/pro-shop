@@ -1,14 +1,9 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var admin = require('firebase-admin');
-// var serviceAccount = require('../service-account.json');
-// var BallLayout = require('./BallLayout');
-var Customer = require('./Customer');
-
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
+const admin = require('firebase-admin');
+const Customer = require('./Customer');
 
 admin.initializeApp({
     credential: admin.credential.cert({
@@ -19,8 +14,8 @@ admin.initializeApp({
     databaseURL: "https://mikes-pro-shop.firebaseio.com"
 });
 
-var db = admin.firestore();
 var app = express();
+var db = admin.firestore();
 var col = db.collection('customers');
 var customers = {};
 var isDirty = true;
@@ -29,236 +24,246 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static('static'));
+app.use(express.static(path.join(__dirname, 'static')));
+
+/*****************************************************/
+
+var uids = process.env.UIDS;
+
+var auth = (req, res, next) => {
+    let token = req.header("Authorization");
+    if (!token) next();
+    else {
+        admin.auth().verifyIdToken(token)
+            .then(function (decodedToken) {
+                let uid = decodedToken.uid;
+                if (uids.includes(uid)) {
+                    console.log("yup!");
+                    req.user = uid;
+                    next();
+                } else {
+                    res.send('not authorized...log out and log back in with an admin email');
+                }
+                // admin.auth().getUser(uid);
+                    // .then(function (userRecord) {
+                    //     // See the UserRecord reference doc for the contents of userRecord.
+                    //     let user = userRecord.toJSON();
+                    //     if (user.email === 'krooked590@gmail.com') {
+                    //         req.user = user;
+                    //         next();
+                    //     } else res.send('not authorized...log out and log back in with an admin email');
+                    // })
+                    // .catch(function (error) {
+                    //     console.log('Error fetching user data:', error);
+                    //     res.status(500);
+                    //     res.send('server encountered an error');
+                    // }).finally(() => {  });
+            }).catch(function (error) {
+                next();
+            });
+    }
+};
+app.use(auth);
 
 app.get('/', function (req, res) {
     res.redirect('/customers');
 });
 
 app.get('/test', (req, res) => {
-    let idToken = req.header('Authorization');
-    console.log('token - ' + idToken);
-    if (!idToken) {
-        res.redirect('/login');
-    } else {
-        admin.auth().verifyIdToken(idToken)
-            .then(function (decodedToken) {
-                let uid = decodedToken.uid;
-                admin.auth().getUser(uid)
-                    .then(function (userRecord) {
-                        // See the UserRecord reference doc for the contents of userRecord.
-                        let user = userRecord.toJSON();
-                        console.log('Successfully fetched user data:', user);
-                        res.send('<h1>LOGGED IN! ' + user.email + '</h1>');
-                    })
-                    .catch(function (error) {
-                        console.log('Error fetching user data:', error);
-                        res.redirect('/login');
-                    });
-                // ...
-            }).catch(function (error) {
-                // Handle error
-                res.redirect('/login');
-            });
-    }
-
-    // console.log(req.header('authorization'));
-    // res.render('test');
-});
-
-app.get('/customers', function (req, res) {
-    if (isDirty) {
-        col.get()
-            .then((snapshot) => {
-                customers = {};
-                snapshot.forEach((doc) => {
-                    customers[doc.id] = Customer.buildCustomerFromDoc(doc);
-                });
-
-                isDirty = false;
-                res.render('index', { customers: customers });
-            })
-            .catch((err) => {
-                console.log('Error getting documents', err);
-
-                res.send('error');
-            });
-    } else {
-        res.render('index', { customers: customers });
-    }
+    res.send("test");
 });
 
 app.get('/login', (req, res) => {
     res.render('login');
 });
 
-app.post('/customers', function (req, res) {
-    isDirty = true;
+app.get('/customers', (req, res) => {
+    if (!req.user) res.redirect('/login');
+    else {
+        if (isDirty) {
+            col.get()
+                .then((snapshot) => {
+                    customers = {};
+                    snapshot.forEach((doc) => {
+                        customers[doc.id] = Customer.buildCustomerFromDoc(doc);
+                    });
 
-    let customer = new Customer();
-    customer.contactInfo.firstName = req.body.customer.firstName.replace(/^\w/, c => c.toUpperCase());
-    customer.contactInfo.lastName = req.body.customer.lastName.replace(/^\w/, c => c.toUpperCase());
-    customer.contactInfo.phoneNumber = req.body.customer.phoneNumber;
-    customer.contactInfo.email = req.body.customer.email;
-    customer.notes = req.body.customer.notes;
-
-    customer.ballLayouts[0].ballName = req.body.layout.ballName;
-    customer.ballLayouts[0].middleForwardPitch = req.body.layout.middleForwardPitch;
-    customer.ballLayouts[0].middleSidePitchL = req.body.layout.middleSidePitchL;
-    customer.ballLayouts[0].middleSidePitchR = req.body.layout.middleSidePitchR;
-    customer.ballLayouts[0].middleReversePitch = req.body.layout.middleReversePitch;
-    customer.ballLayouts[0].middleHoleSize = req.body.layout.middleHoleSize;
-    customer.ballLayouts[0].middleInsertSize = req.body.layout.middleInsertSize;
-    customer.ballLayouts[0].ringForwardPitch = req.body.layout.ringForwardPitch;
-    customer.ballLayouts[0].ringSidePitchL = req.body.layout.ringSidePitchL;
-    customer.ballLayouts[0].ringSidePitchR = req.body.layout.ringSidePitchR;
-    customer.ballLayouts[0].ringReversePitch = req.body.layout.ringReversePitch;
-    customer.ballLayouts[0].ringHoleSize = req.body.layout.ringHoleSize;
-    customer.ballLayouts[0].ringInsertSize = req.body.layout.ringInsertSize;
-    customer.ballLayouts[0].bridgeSpacing = req.body.layout.bridgeSpacing;
-    customer.ballLayouts[0].middleActual = req.body.layout.middleActual;
-    customer.ballLayouts[0].middleCut = req.body.layout.middleCut;
-    customer.ballLayouts[0].ringActual = req.body.layout.ringActual;
-    customer.ballLayouts[0].ringCut = req.body.layout.ringCut;
-    customer.ballLayouts[0].thumbForwardPitch = req.body.layout.thumbForwardPitch;
-    customer.ballLayouts[0].thumbReversePitch = req.body.layout.thumbReversePitch;
-    customer.ballLayouts[0].thumbSidePitchL = req.body.layout.thumbSidePitchL;
-    customer.ballLayouts[0].thumbSidePitchR = req.body.layout.thumbSidePitchR;
-    customer.ballLayouts[0].ovalAngle = req.body.layout.ovalAngle;
-
-    let contactInfo = JSON.stringify(customer.contactInfo);
-    let layouts = JSON.stringify(customer.ballLayouts);
-    let docRef = col.doc();
-
-    docRef.set({
-        id: docRef.id,
-        contactInfo: contactInfo,
-        layouts: layouts,
-        notes: customer.notes
-    }).then(ref => {
-        console.log('Created customer with id - ' + docRef.id);
-        // res.send('200 - OK');
-        res.redirect('/customers/' + docRef.id);
-    }).catch(err => {
-        console.log('Error getting documents', err);
-        res.send('420 - Error getting documents'); //no idea what code i should return so using 300 for now
-    });
+                    isDirty = false;
+                    res.render('index', { customers: customers });
+                })
+                .catch((err) => {
+                    console.log('Error getting documents', err);
+                    res.status(404);
+                    res.send('Error getting documents');
+                });
+        } else {
+            res.render('index', { customers: customers });
+        }
+    }
 });
 
-app.put('/customers/:id', function (req, res) {
-    isDirty = true;
+app.post('/customers', (req, res) => {
+    if (!req.user) res.redirect('/login');
+    else {
+        isDirty = true;
 
-    let id = req.params.id;
-    let customer = new Customer();
-    customer.contactInfo.firstName = req.body.customer.firstName.replace(/^\w/, c => c.toUpperCase());
-    customer.contactInfo.lastName = req.body.customer.lastName.replace(/^\w/, c => c.toUpperCase());
-    customer.contactInfo.phoneNumber = req.body.customer.phoneNumber;
-    customer.contactInfo.email = req.body.customer.email;
-    customer.notes = req.body.customer.notes;
+        let customer = fillOutCustomerDetails(req.body);
+        let contactInfo = JSON.stringify(customer.contactInfo);
+        let layouts = JSON.stringify(customer.ballLayouts);
+        let docRef = col.doc();
 
-    customer.ballLayouts[0].ballName = req.body.layout.ballName;
-    customer.ballLayouts[0].middleForwardPitch = req.body.layout.middleForwardPitch;
-    customer.ballLayouts[0].middleSidePitchL = req.body.layout.middleSidePitchL;
-    customer.ballLayouts[0].middleSidePitchR = req.body.layout.middleSidePitchR;
-    customer.ballLayouts[0].middleReversePitch = req.body.layout.middleReversePitch;
-    customer.ballLayouts[0].middleHoleSize = req.body.layout.middleHoleSize;
-    customer.ballLayouts[0].middleInsertSize = req.body.layout.middleInsertSize;
-    customer.ballLayouts[0].ringForwardPitch = req.body.layout.ringForwardPitch;
-    customer.ballLayouts[0].ringSidePitchL = req.body.layout.ringSidePitchL;
-    customer.ballLayouts[0].ringSidePitchR = req.body.layout.ringSidePitchR;
-    customer.ballLayouts[0].ringReversePitch = req.body.layout.ringReversePitch;
-    customer.ballLayouts[0].ringHoleSize = req.body.layout.ringHoleSize;
-    customer.ballLayouts[0].ringInsertSize = req.body.layout.ringInsertSize;
-    customer.ballLayouts[0].bridgeSpacing = req.body.layout.bridgeSpacing;
-    customer.ballLayouts[0].middleActual = req.body.layout.middleActual;
-    customer.ballLayouts[0].middleCut = req.body.layout.middleCut;
-    customer.ballLayouts[0].ringActual = req.body.layout.ringActual;
-    customer.ballLayouts[0].ringCut = req.body.layout.ringCut;
-    customer.ballLayouts[0].thumbForwardPitch = req.body.layout.thumbForwardPitch;
-    customer.ballLayouts[0].thumbReversePitch = req.body.layout.thumbReversePitch;
-    customer.ballLayouts[0].thumbSidePitchL = req.body.layout.thumbSidePitchL;
-    customer.ballLayouts[0].thumbSidePitchR = req.body.layout.thumbSidePitchR;
-    customer.ballLayouts[0].ovalAngle = req.body.layout.ovalAngle;
-
-    let contactInfo = JSON.stringify(customer.contactInfo);
-    let layouts = JSON.stringify(customer.ballLayouts);
-    let docRef = col.doc(id);
-    docRef.set({
-        id: docRef.id,
-        contactInfo: contactInfo,
-        layouts: layouts,
-        notes: customer.notes
-    }).then(ref => {
-        console.log('Edited customer with id - ' + docRef.id);
-        // res.send('200 - OK');
-        res.redirect('/customers/' + docRef.id);
-    }).catch(err => {
-        console.log('Error getting documents', err);
-        res.send('420 - Error getting documents'); //no idea what code i should return so using 300 for now
-    });
-});
-
-app.get('/customers/new', function (req, res) {
-    res.render('new');
-});
-
-app.get('/customers/:id', function (req, res) {
-    let id = req.params.id;
-
-    col.doc(id).get()
-        .then(doc => {
-            if (!doc.exists) {
-                console.log('No such document!');
-                res.redirect('/customers');
-            } else {
-                let customer = Customer.buildCustomerFromDoc(doc);
-                // console.log(customer);
-                res.render('show', { customer: customer });
-            }
-        })
-        .catch(err => {
-            console.log('Error getting document', err);
-            res.redirect('/customers');
+        docRef.set({
+            id: docRef.id,
+            contactInfo: contactInfo,
+            layouts: layouts,
+            notes: customer.notes
+        }).then(ref => {
+            console.log('Created customer with id - ' + docRef.id);
+            res.send(docRef.id);
+        }).catch(err => {
+            console.log('Error getting documents', err);
+            res.status(404);
+            res.send('Error getting documents');
         });
-
-    // res.render('show', { customer: customer });
+    }
 });
 
-app.get('/customers/:id/edit', function (req, res) {
-    // res.send('edit page');
-    let id = req.params.id;
+app.put('/customers/:id', (req, res) => {
+    if (!req.user) res.redirect('/login');
+    else {
+        isDirty = true;
 
-    col.doc(id).get()
-        .then(doc => {
-            if (!doc.exists) {
-                console.log('No such document!');
-                res.redirect('/customers');
-            } else {
-                let customer = Customer.buildCustomerFromDoc(doc);
-                // console.log(customer);
-                res.render('edit', { customer: customer });
-            }
-        })
-        .catch(err => {
-            console.log('Error getting document', err);
-            res.redirect('/customers');
+        let id = req.params.id;
+        let customer = fillOutCustomerDetails(req.body);
+        let contactInfo = JSON.stringify(customer.contactInfo);
+        let layouts = JSON.stringify(customer.ballLayouts);
+        let docRef = col.doc(id);
+
+        docRef.set({
+            id: docRef.id,
+            contactInfo: contactInfo,
+            layouts: layouts,
+            notes: customer.notes
+        }).then(ref => {
+            console.log('Edited customer with id - ' + docRef.id);
+            res.send('/'+docRef.id);
+        }).catch(err => {
+            console.log('Error getting documents', err);
+            res.send(404);
+            res.send('Error getting documents');
         });
+    }
 });
 
-app.delete('/customers/:id', function (req, res) {
-    isDirty = true;
-    let id = req.params.id;
-    col.doc(id).delete();
-    res.redirect('/customers');
+app.get('/customers/new', (req, res) => {
+    if (!req.user) {
+        res.status(401);
+        res.redirect("/login");
+    } else {
+        res.render('new');
+    }
+});
+
+app.get('/customers/:id', (req, res) => {
+    if (!req.user) res.redirect("/login");
+    else {
+        let id = req.params.id;
+        col.doc(id).get()
+            .then(doc => {
+                if (!doc.exists) {
+                    console.log('No such document!');
+                    res.redirect('/customers');
+                } else {
+                    let customer = Customer.buildCustomerFromDoc(doc);
+                    res.render('show', { customer: customer });
+                }
+            })
+            .catch(err => {
+                console.log('Error getting document', err);
+                res.redirect('/customers');
+            });
+    }
+});
+
+
+app.get('/customers/:id/edit', (req, res) => {
+    if (!req.user) res.redirect('/login');
+    else {
+        let id = req.params.id;
+        col.doc(id).get()
+            .then(doc => {
+                if (!doc.exists) {
+                    console.log('No such document!');
+                    res.status(404);
+                    // res.redirect('/customers');
+                } else {
+                    let customer = Customer.buildCustomerFromDoc(doc);
+                    // console.log(customer);
+                    res.render('edit', { customer: customer });
+                }
+            })
+            .catch(err => {
+                console.log('Error getting document', err);
+                res.status(404);
+                // res.redirect('/customers');
+            });
+    }
+});
+
+app.delete('/customers/:id', (req, res) => {
+    if (!req.user) res.redirect('/login');
+    else {
+        isDirty = true;
+        let id = req.params.id;
+
+        col.doc(id).delete();
+        res.status(200);
+        res.send('');
+    }
 });
 
 /******************************************************************/
 
 var port = process.env.PORT || 3000;
 
-app.listen(port, function () {
+app.listen(port, () => {
     console.log("starting server on port " + port + "...");
 });
+
+function fillOutCustomerDetails(data) {
+    let customer = new Customer();
+    customer.contactInfo.firstName = data.customer.firstName.replace(/^\w/, c => c.toUpperCase());
+    customer.contactInfo.lastName = data.customer.lastName.replace(/^\w/, c => c.toUpperCase());
+    customer.contactInfo.phoneNumber = data.customer.phoneNumber;
+    customer.contactInfo.email = data.customer.email;
+    customer.notes = data.customer.notes;
+
+    customer.ballLayouts[0].ballName = data.layout.ballName;
+    customer.ballLayouts[0].middleForwardPitch = data.layout.middleForwardPitch;
+    customer.ballLayouts[0].middleSidePitchL = data.layout.middleSidePitchL;
+    customer.ballLayouts[0].middleSidePitchR = data.layout.middleSidePitchR;
+    customer.ballLayouts[0].middleReversePitch = data.layout.middleReversePitch;
+    customer.ballLayouts[0].middleHoleSize = data.layout.middleHoleSize;
+    customer.ballLayouts[0].middleInsertSize = data.layout.middleInsertSize;
+    customer.ballLayouts[0].ringForwardPitch = data.layout.ringForwardPitch;
+    customer.ballLayouts[0].ringSidePitchL = data.layout.ringSidePitchL;
+    customer.ballLayouts[0].ringSidePitchR = data.layout.ringSidePitchR;
+    customer.ballLayouts[0].ringReversePitch = data.layout.ringReversePitch;
+    customer.ballLayouts[0].ringHoleSize = data.layout.ringHoleSize;
+    customer.ballLayouts[0].ringInsertSize = data.layout.ringInsertSize;
+    customer.ballLayouts[0].bridgeSpacing = data.layout.bridgeSpacing;
+    customer.ballLayouts[0].middleActual = data.layout.middleActual;
+    customer.ballLayouts[0].middleCut = data.layout.middleCut;
+    customer.ballLayouts[0].ringActual = data.layout.ringActual;
+    customer.ballLayouts[0].ringCut = data.layout.ringCut;
+    customer.ballLayouts[0].thumbForwardPitch = data.layout.thumbForwardPitch;
+    customer.ballLayouts[0].thumbReversePitch = data.layout.thumbReversePitch;
+    customer.ballLayouts[0].thumbSidePitchL = data.layout.thumbSidePitchL;
+    customer.ballLayouts[0].thumbSidePitchR = data.layout.thumbSidePitchR;
+    customer.ballLayouts[0].ovalAngle = data.layout.ovalAngle;
+
+    return customer;
+}
 
 // function populateCustomers() {
 //     db.collection('customers').get()
@@ -285,25 +290,6 @@ app.listen(port, function () {
 
 
 //______________________________//______________________________
-
-//get token on web
-// firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-//     // Send token to your backend via HTTPS
-//     // ...
-// }).catch(function (error) {
-//     // Handle error
-// });
-
-//verify toker on server
-// idToken comes from the client app
-// admin.auth().verifyIdToken(idToken)
-//     .then(function (decodedToken) {
-//         let uid = decodedToken.uid;
-//         // ...
-//     }).catch(function (error) {
-//         // Handle error
-//     });
-
 
 // Verify the ID token while checking if the token is revoked by passing
 // checkRevoked true.
