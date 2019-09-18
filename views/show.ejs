@@ -1,6 +1,9 @@
 <h1>Show Customer</h1>
 <button onclick="get('customers')">Home</button>
 <button onclick="get('customers/<%= customer.id %>/edit')">Edit</button>
+<form id="deleteForm" method="POST" action="/customers/<%= customer.id %>?_method=DELETE">
+    <button type="button" onclick="confirmDelete(document.getElementById('deleteForm'))">Delete</button>
+</form>
 <p>Name: <%= customer.contactInfo.firstName %> <%= customer.contactInfo.lastName %></p>
 <p>Email: <%= customer.contactInfo.email %></p>
 <p>Phone Number: <%= customer.contactInfo.phoneNumber %></p>

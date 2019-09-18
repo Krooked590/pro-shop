@@ -11,7 +11,7 @@ admin.initializeApp({
         "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         "client_email": process.env.FIREBASE_CLIENT_EMAIL,
     }),
-    databaseURL: "https://mikes-pro-shop.firebaseio.com"
+    databaseURL: process.env.DATABASE_URL
 });
 
 var app = express();
@@ -34,32 +34,36 @@ var auth = (req, res, next) => {
     let token = req.header("Authorization");
     if (!token) next();
     else {
-        admin.auth().verifyIdToken(token)
+        admin.auth().verifyIdToken(token, true)
             .then(function (decodedToken) {
                 let uid = decodedToken.uid;
                 if (uids.includes(uid)) {
-                    console.log("yup!");
-                    req.user = uid;
+                    req.validated = true;
                     next();
                 } else {
+                    admin.auth().getUser(uid)
+                        .then(function (userRecord) {
+                            // See the UserRecord reference doc for the contents of userRecord.
+                            let user = userRecord.toJSON();
+                            if (uids.includes(user.email)) {
+                                req.validated = true;
+                                next();
+                            } else res.send('not authorized...log out and log back in with an admin email');
+                        })
+                        .catch(function (error) {
+                            console.log('Error fetching user data:', error);
+                            res.status(500);
+                            res.send('server encountered an error');
+                        });
+                }
+            }).catch(function (error) {
+                if (error.code == 'auth/id-token-revoked') {
+                    // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
+                    res.send('Auth token has been revoked. Please log out and back in to generate new auth token');
+                } else {
+                    // Token is invalid.
                     res.send('not authorized...log out and log back in with an admin email');
                 }
-                // admin.auth().getUser(uid);
-                    // .then(function (userRecord) {
-                    //     // See the UserRecord reference doc for the contents of userRecord.
-                    //     let user = userRecord.toJSON();
-                    //     if (user.email === 'krooked590@gmail.com') {
-                    //         req.user = user;
-                    //         next();
-                    //     } else res.send('not authorized...log out and log back in with an admin email');
-                    // })
-                    // .catch(function (error) {
-                    //     console.log('Error fetching user data:', error);
-                    //     res.status(500);
-                    //     res.send('server encountered an error');
-                    // }).finally(() => {  });
-            }).catch(function (error) {
-                next();
             });
     }
 };
@@ -78,7 +82,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/customers', (req, res) => {
-    if (!req.user) res.redirect('/login');
+    if (!req.validated) res.redirect('/login');
     else {
         if (isDirty) {
             col.get()
@@ -103,7 +107,7 @@ app.get('/customers', (req, res) => {
 });
 
 app.post('/customers', (req, res) => {
-    if (!req.user) res.redirect('/login');
+    if (!req.validated) res.redirect('/login');
     else {
         isDirty = true;
 
@@ -119,7 +123,7 @@ app.post('/customers', (req, res) => {
             notes: customer.notes
         }).then(ref => {
             console.log('Created customer with id - ' + docRef.id);
-            res.send(docRef.id);
+            res.send('/'+docRef.id);
         }).catch(err => {
             console.log('Error getting documents', err);
             res.status(404);
@@ -129,7 +133,7 @@ app.post('/customers', (req, res) => {
 });
 
 app.put('/customers/:id', (req, res) => {
-    if (!req.user) res.redirect('/login');
+    if (!req.validated) res.redirect('/login');
     else {
         isDirty = true;
 
@@ -146,7 +150,7 @@ app.put('/customers/:id', (req, res) => {
             notes: customer.notes
         }).then(ref => {
             console.log('Edited customer with id - ' + docRef.id);
-            res.send('/'+docRef.id);
+            res.send('/' + docRef.id);
         }).catch(err => {
             console.log('Error getting documents', err);
             res.send(404);
@@ -156,7 +160,7 @@ app.put('/customers/:id', (req, res) => {
 });
 
 app.get('/customers/new', (req, res) => {
-    if (!req.user) {
+    if (!req.validated) {
         res.status(401);
         res.redirect("/login");
     } else {
@@ -165,7 +169,7 @@ app.get('/customers/new', (req, res) => {
 });
 
 app.get('/customers/:id', (req, res) => {
-    if (!req.user) res.redirect("/login");
+    if (!req.validated) res.redirect("/login");
     else {
         let id = req.params.id;
         col.doc(id).get()
@@ -187,7 +191,7 @@ app.get('/customers/:id', (req, res) => {
 
 
 app.get('/customers/:id/edit', (req, res) => {
-    if (!req.user) res.redirect('/login');
+    if (!req.validated) res.redirect('/login');
     else {
         let id = req.params.id;
         col.doc(id).get()
@@ -211,7 +215,7 @@ app.get('/customers/:id/edit', (req, res) => {
 });
 
 app.delete('/customers/:id', (req, res) => {
-    if (!req.user) res.redirect('/login');
+    if (!req.validated) res.redirect('/login');
     else {
         isDirty = true;
         let id = req.params.id;
@@ -285,23 +289,3 @@ function fillOutCustomerDetails(data) {
 //             console.log('Error getting documents', err);
 //         });
 // }
-
-
-
-
-//______________________________//______________________________
-
-// Verify the ID token while checking if the token is revoked by passing
-// checkRevoked true.
-// let checkRevoked = true;
-// admin.auth().verifyIdToken(idToken, checkRevoked)
-//     .then(payload => {
-//         // Token is valid.
-//     })
-//     .catch(error => {
-//         if (error.code == 'auth/id-token-revoked') {
-//             // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
-//         } else {
-//             // Token is invalid.
-//         }
-//     });
