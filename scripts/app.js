@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static('static'));
 
 /*****************************************************/
 
@@ -48,7 +48,7 @@ var auth = (req, res, next) => {
                             if (uids.includes(user.email)) {
                                 req.validated = true;
                                 next();
-                            } else res.send('not authorized...log out and log back in with an admin email');
+                            } else res.send('not authorized...log out and log in with an admin email');
                         })
                         .catch(function (error) {
                             console.log('Error fetching user data:', error);
@@ -62,7 +62,7 @@ var auth = (req, res, next) => {
                     res.send('Auth token has been revoked. Please log out and back in to generate new auth token');
                 } else {
                     // Token is invalid.
-                    res.send('not authorized...log out and log back in with an admin email');
+                    res.send('not authorized...log out and log in with an admin email');
                 }
             });
     }

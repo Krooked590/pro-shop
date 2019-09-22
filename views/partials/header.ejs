@@ -9,6 +9,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/app.css">
+
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -23,6 +25,7 @@
     <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
     <!-- TODO: Add SDKs for Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
+    <script src="js/helper.js"></script>
 
     <script>
         // Your web app's Firebase configuration
@@ -41,76 +44,7 @@
         }
             // firebase.analytics();
     </script>
-    <script>
-        function get(endpoint) {
-            if (firebase.auth().currentUser) {
-                firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-                    // Send token to backend and load response
-                    // console.log(idToken);
-                    $.ajax({
-                        url: "/" + endpoint,
-                        type: 'get',
-                        dataType: 'html',
-                        headers: { 'Authorization': idToken },
-                        success: function (html) {
-                            history.pushState({}, endpoint, "/" + endpoint);
-                            $("#content").html(html);
-                        },
-                        error: function () {
-                            alert("Error");
-                        }
-                    });
-                }).catch(function (error) {
-                    // Handle error
-                    console.log(error);
-                });
-            } else {
-                alert("Sorry something went wrong. You need to login again to continue.");
-                window.location = "/login";
-            }
-        }
-
-        function confirmDelete(form) {
-            if(confirm("Are you sure you want to delete this user?")) {
-                post(form);
-            }
-        }
-
-        function post(form) {
-            if (firebase.auth().currentUser) {
-                firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-                    // Send token to backend and load response
-                    // console.log(idToken);
-                    $(form).find('input[required]').each((index, element) => {
-                        if(!$(element).val()) {
-                            console.log("EMPTY!!!!!");
-                        }
-                    });
-                    let formData = $(form).serialize();
-                    $.ajax({
-                        type: 'POST',
-                        url: $(form).attr('action'),
-                        data: formData,
-                        headers: { "Authorization": idToken },
-                        success: (response) => {
-                            // console.log("success - " + response);
-                            get('customers'+response);
-                        },
-                        error: function () {
-                            alert("Error");
-                        }
-                    });
-                }).catch(function (error) {
-                    // Handle error
-                    console.log(error);
-                });
-            } else {
-                alert("Sorry something went wrong. You need to log in again to continue.");
-                window.location = "/login";
-            }
-        }
-    </script>
-
+    
     <title>Mikes App!</title>
 </head>
 
