@@ -1,10 +1,29 @@
-body {
-    /* just to make sure the css is loading */
-    background: white;
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-center {
+    margin: auto;
+}
+
+.mpzero {
+    margin: 0;
+    padding: 0;
 }
 
 .pageHeader {
     height: 5rem;
     display: flex;
     align-items: center;
+}
+
+.buttonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background: pink; */
 }

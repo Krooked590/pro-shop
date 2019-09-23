@@ -1,10 +1,3 @@
-#createNewButtonWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background: pink; */
-}
-
 #listItemButton {
     text-align: right;
 }
