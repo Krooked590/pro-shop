@@ -1,21 +1,14 @@
-<div id='container'>
+<link rel="stylesheet" href="/styles/index.css">
+
+<div>
     <div class='row'>
-        <div class='col' id='listHeader'>
+        <div class='col pageHeader'>
             <h1>Mikes App!</h1>
         </div>
         <div class='col-3' id='createNewButtonWrapper'>
-            <button type="button" class="btn btn-success" onclick="get('customers/new')">CREATE CUSTOMER</button>
+            <button type="button" class="btn btn-success" onclick="get('customers/new')">+ New</button>
         </div>
     </div>
-
-    <!-- <ul class="list-group" id="customers">
-        <% for(var key in customers) { %>
-            <% if (customers.hasOwnProperty(key)) { %>
-                <li class='userListItem list-group-item'><%= customers[key].contactInfo.firstName %> <%= customers[key].contactInfo.lastName %> 
-                    <button onclick="get('customers/<%= customers[key].id %>')">View</button></li>
-                <% } %>
-            <% } %>
-    </ul> -->
 
     <ul class="list-group" id="customers">
         <% for(var key in customers) { %>

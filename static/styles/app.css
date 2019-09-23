@@ -3,18 +3,8 @@ body {
     background: white;
 }
 
-#listHeader {
+.pageHeader {
     height: 5rem;
     display: flex;
     align-items: center;
-}
-
-#createNewButtonWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#listItemButton {
-    text-align: right;
 }

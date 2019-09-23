@@ -16,7 +16,7 @@ admin.initializeApp({
 var app = express();
 var db = admin.firestore();
 var col = db.collection('customers');
-var customers = {};
+var customers = [];
 var isDirty = true;
 
 app.set("view engine", "ejs");
@@ -57,7 +57,7 @@ var auth = (req, res, next) => {
                 }
             }).catch(function (error) {
                 if (error.code == 'auth/id-token-revoked') {
-                    // Token has been revoked. Inform the user to reauthenticate or signOut() the user.
+                    // Token has been revoked. Inform the user to re-authenticate or signOut() the user.
                     res.send('Auth token has been revoked. Please log out and back in to generate new auth token');
                 } else {
                     // Token is invalid.
@@ -86,12 +86,14 @@ app.get('/customers', (req, res) => {
         if (isDirty) {
             col.get()
                 .then((snapshot) => {
-                    customers = {};
+                    customers = [];
                     snapshot.forEach((doc) => {
-                        customers[doc.id] = Customer.buildCustomerFromDoc(doc);
+                        // customers[doc.id] = Customer.buildCustomerFromDoc(doc);
+                        customers.push(Customer.buildCustomerFromDoc(doc));
                     });
 
                     isDirty = true;
+                    customers.sort((a, b) => (a.contactInfo.firstName > b.contactInfo.firstName) ? 1 : -1);
                     res.render('index', { customers: customers });
                 })
                 .catch((err) => {
