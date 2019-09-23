@@ -1,9 +1,20 @@
 <link rel="stylesheet" href="/styles/show.css">
 
 <div>
-    <div class='row'>
-        <div class='col pageHeader'>
+    <div class="row">
+        <div class="col pageHeader">
             <h1><%= customer.contactInfo.firstName %> <%= customer.contactInfo.lastName %></h1>
+            <div class="right">
+                <button type="button" class="btn btn-primary someSpace"
+                    onclick="get('customers/<%= customer.id %>/edit')"><i class="material-icons">edit</i></button>
+                <form id="deleteForm" method="POST" action="/customers/<%= customer.id %>?_method=DELETE"
+                    style="display: inline">
+                    <button type="button" class="btn btn-danger someSpace"
+                        onclick="confirmDelete(document.getElementById('deleteForm'))"><i
+                            class="material-icons">delete_forever</i></button>
+                </form>
+                <!-- <button onclick="get('customers')">Home</button> -->
+            </div>
         </div>
     </div>
     <div class="row">
@@ -16,14 +27,12 @@
             </h5>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <p>Notes: <%= customer.notes %></p>
+        </div>
+    </div>
 
-    <!-- <button onclick="get('customers')">Home</button> -->
-    <button type="button" class="btn btn-primary" onclick="get('customers/<%= customer.id %>/edit')">Edit</button>
-    <form id="deleteForm" method="POST" action="/customers/<%= customer.id %>?_method=DELETE">
-        <button type="button" class="btn btn-danger"
-            onclick="confirmDelete(document.getElementById('deleteForm'))">Delete</button>
-    </form>
-    <p>Notes: <%= customer.notes %></p>
     <hr>
     <h2>Layout Info:</h2>
     <p>Ball Name: <%= customer.ballLayouts[0].ballName %></p>
