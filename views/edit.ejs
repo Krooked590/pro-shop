@@ -1,115 +1,183 @@
-<h1>Edit Customer</h1>
-<button onclick="get('customers')">Home</button>
-<button onclick="get('customers/<%= customer.id %>')">Back</button>
-<form id="editForm" action="/customers/<%= customer.id %>?_method=PUT" method="POST">
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" name="customer[firstName]" placeholder="First Name"
-        value="<%= customer.contactInfo.firstName %>" required>
+<link rel="stylesheet" href="/styles/edit.css">
 
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="customer[lastName]" placeholder="Last Name"
-        value="<%= customer.contactInfo.lastName %>">
+<div class="row">
+    <div class="col pageHeader">
+        <h1>Create New</h1>
+    </div>
+    <div class="col-3 buttonWrapper">
+        <div class="right">
+            <button type="button" class="btn btn-info someSpace"
+                onclick="get('customers/<%= customer.id %>')">Back</button>
+            <button type="button" class="btn btn-success someSpace"
+                onclick="post(document.getElementById('createForm'))">Submit</button>
+        </div>
+    </div>
+</div>
+<!-- <button onclick="get('customers')">Home</button> -->
+<div style="padding-bottom: 40px;">
+    <form id="createForm" action="/customers" method="POST">
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="firstName">First Name:</label>
+                <input class="form-control" type="text" id="firstName" name="customer[firstName]" placeholder="Required"
+                    required>
+            </div>
+            <div class="form-group col">
+                <label for="lastName">Last Name:</label>
+                <input class="form-control" type="text" id="lastName" name="customer[lastName]">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="phoneNumber">Phone Number:</label>
+                <input class="form-control" type="tel" id="phoneNumber" name="customer[phoneNumber]"
+                    placeholder="Required" required>
+            </div>
+            <div class="form-group col">
+                <label for="email">Email:</label>
+                <input class="form-control" type="email" id="email" name="customer[email]">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="ballName">Ball Name:</label>
+                <input class="form-control" type="text" id="ballName" name="layout[ballName]">
+            </div>
+        </div>
 
-    <label for="phoneNumber">Phone Number:</label>
-    <input type="number" id="phoneNumber" name="customer[phoneNumber]" placeholder="Phone Number"
-        value="<%= customer.contactInfo.phoneNumber %>" required>
+        <hr>
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleForwardPitch"
+                        name="layout[middleForwardPitch]"></textarea>
+                </div>
+            </div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringForwardPitch" name="layout[ringForwardPitch]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="customer[email]" placeholder="example@email.com"
-        value="<%= customer.contactInfo.email %>">
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleSidePitchL" name="layout[middleSidePitchL]"></textarea>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row float-center square-lg">
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="middleSidePitchR"
+                            name="layout[middleSidePitchR]"></textarea>
+                    </div>
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="ringSidePitchL" name="layout[ringSidePitchL]"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringSidePitchR" name="layout[ringSidePitchR]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="notes">Notes:</label>
-    <textarea id="notes" name="customer[notes]" id="notes" cols="30" rows="10"
-        placeholder="Notes"><%= customer.notes %></textarea>
-    <br>
-    <br>
-    <label for="ballName">Ball Name:</label>
-    <input type="text" id="ballName" name="layout[ballName]" value="<%= customer.ballLayouts[0].ballName %>">
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleReversePitch"
+                        name="layout[middleReversePitch]"></textarea>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row float-center square-lg">
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="middleHoleSize" name="layout[middleHoleSize]"></textarea>
+                    </div>
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="ringHoleSize" name="layout[ringHoleSize]"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringReversePitch" name="layout[ringReversePitch]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="middleForwardPitch">Middle Forward Pitch:</label>
-    <input type="text" id="middleForwardPitch" name="layout[middleForwardPitch]"
-        value="<%= customer.ballLayouts[0].middleForwardPitch %>">
+        <div class="form-row square-group ">
+            <div class="col d-flex justify-content-center">
+                <div class="square">
+                    <textarea class="pitchTextArea" id="middleActual" name="layout[middleActual]"></textarea>
+                    <label for="middleActual">Actual</label>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="middleCut" name="layout[middleCut]"></textarea>
+                    <label for="middleActual">Cut</label>
+                </div>
+                <div class="square"></div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="ringActual" name="layout[ringActual]"></textarea>
+                    <label for="middleActual">Actual</label>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="ringCut" name="layout[ringCut]"></textarea>
+                    <label for="middleActual">Cut</label>
+                </div>
+            </div>
+        </div>
 
-    <label for="middleSidePitchL">Middle Side Pitch L:</label>
-    <input type="text" id="middleSidePitchL" name="layout[middleSidePitchL]"
-        value="<%= customer.ballLayouts[0].middleSidePitchL %>">
+        <br>
 
-    <label for="middleSidePitchR">Middle Side Pitch R:</label>
-    <input type="text" id="middleSidePitchR" name="layout[middleSidePitchR]"
-        value="<%= customer.ballLayouts[0].middleSidePitchR %>">
+        <div class="form-row square-group">
+            <div class="col">
+                <div class="float-center square">
+                    <textarea class="pitchTextArea" id="thumbForwardPitch" name="layout[thumbForwardPitch]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="middleReversePitch">Middle Reverse Pitch:</label>
-    <input type="text" id="middleReversePitch" name="layout[middleReversePitch]"
-        value="<%= customer.ballLayouts[0].middleReversePitch %>">
+        <div class="form-row square-group">
+            <div class="col d-flex justify-content-center">
+                <div class="square">
+                    <textarea class="pitchTextArea" id="thumbSidePitchL" name="layout[thumbSidePitchL]"></textarea>
+                </div>
+                <div class="square thumbSpace">
+                    <textarea class="pitchTextArea" id="ovalAngle" name="layout[ovalAngle]"></textarea>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="thumbSidePitchR" name="layout[thumbSidePitchR]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="middleHoleSize">Middle Hole Size:</label>
-    <input type="text" id="middleHoleSize" name="layout[middleHoleSize]"
-        value="<%= customer.ballLayouts[0].middleHoleSize %>">
+        <div class="form-row square-group" style="padding-bottom: 20px;">
+            <div class="col">
+                <div class="float-center square">
+                    <textarea class="pitchTextArea" id="thumbReversePitch" name="layout[thumbReversePitch]"></textarea>
+                </div>
+            </div>
+        </div>
 
-    <label for="middleInsertSize">Middle Insert Size:</label>
-    <input type="text" id="middleInsertSize" name="layout[middleInsertSize]"
-        value="<%= customer.ballLayouts[0].middleInsertSize %>">
+        <div class="form-row">
+            <div class="form-group col-6">
+                <label for="middleInsertSize">Middle Insert Size:</label>
+                <input type="text" class="form-control" id="middleInsertSize" name="layout[middleInsertSize]">
 
-    <label for="ringForwardPitch">Ring Forward Pitch:</label>
-    <input type="text" id="ringForwardPitch" name="layout[ringForwardPitch]"
-        value="<%= customer.ballLayouts[0].ringForwardPitch %>">
+                <label for="ringInsertSize">Ring Insert Size:</label>
+                <input type="text" class="form-control" id="ringInsertSize" name="layout[ringInsertSize]">
 
-    <label for="ringSidePitchL">Ring Side Pitch L:</label>
-    <input type="text" id="ringSidePitchL" name="layout[ringSidePitchL]"
-        value="<%= customer.ballLayouts[0].ringSidePitchL %>">
-
-    <label for="ringSidePitchR">Ring Side Pitch R:</label>
-    <input type="text" id="ringSidePitchR" name="layout[ringSidePitchR]"
-        value="<%= customer.ballLayouts[0].ringSidePitchR %>">
-
-    <label for="ringReversePitch">Ring Reverse Pitch:</label>
-    <input type="text" id="ringReversePitch" name="layout[ringReversePitch]"
-        value="<%= customer.ballLayouts[0].ringReversePitch %>">
-
-    <label for="ringHoleSize">Ring Hole Size:</label>
-    <input type="text" id="ringHoleSize" name="layout[ringHoleSize]"
-        value="<%= customer.ballLayouts[0].ringHoleSize %>">
-
-    <label for="ringInsertSize">Ring Insert Size:</label>
-    <input type="text" id="ringInsertSize" name="layout[ringInsertSize]"
-        value="<%= customer.ballLayouts[0].ringInsertSize %>">
-
-    <label for="bridgeSpacing">Bridge Spacing:</label>
-    <input type="text" id="bridgeSpacing" name="layout[bridgeSpacing]"
-        value="<%= customer.ballLayouts[0].bridgeSpacing %>">
-
-    <label for="middleActual">Middle Actual:</label>
-    <input type="text" id="middleActual" name="layout[middleActual]"
-        value="<%= customer.ballLayouts[0].middleActual %>">
-
-    <label for="middleCut">Middle Cut:</label>
-    <input type="text" id="middleCut" name="layout[middleCut]" value="<%= customer.ballLayouts[0].middleCut %>">
-
-    <label for="ringActual">Ring Actual:</label>
-    <input type="text" id="ringActual" name="layout[ringActual]" value="<%= customer.ballLayouts[0].ringActual %>">
-
-    <label for="ringCut">Ring Cut:</label>
-    <input type="text" id="ringCut" name="layout[ringCut]" value="<%= customer.ballLayouts[0].ringCut %>">
-
-    <label for="thumbForwardPitch">Thumb Forward Pitch:</label>
-    <input type="text" id="thumbForwardPitch" name="layout[thumbForwardPitch]"
-        value="<%= customer.ballLayouts[0].thumbForwardPitch %>">
-
-    <label for="thumbReversePitch">Thumb Reverse Pitch:</label>
-    <input type="text" id="thumbReversePitch" name="layout[thumbReversePitch]"
-        value="<%= customer.ballLayouts[0].thumbReversePitch %>">
-
-    <label for="thumbSidePitchL">Thumb Side Pitch L:</label>
-    <input type="text" id="thumbSidePitchL" name="layout[thumbSidePitchL]"
-        value="<%= customer.ballLayouts[0].thumbSidePitchL %>">
-
-    <label for="thumbSidePitchR">Thumb Side Pitch R:</label>
-    <input type="text" id="thumbSidePitchR" name="layout[thumbSidePitchR]"
-        value="<%= customer.ballLayouts[0].thumbSidePitchR %>">
-
-    <label for="ovalAngle">Oval Angle:</label>
-    <input type="text" id="ovalAngle" name="layout[ovalAngle]" value="<%= customer.ballLayouts[0].ovalAngle %>">
-
-    <!-- <input type="submit"> -->
-    <button type="button" onclick="post(document.getElementById('editForm'))">Submit</button>
-</form>
+                <label for="bridgeSpacing">Bridge Spacing:</label>
+                <input type="text" class="form-control" id="bridgeSpacing" name="layout[bridgeSpacing]">
+            </div>
+            <div class="col-6">
+                <textarea class="form-control" id="notes" name="customer[notes]" id="notes" cols="30" rows="10"
+                    placeholder="Notes" style="resize: none"></textarea>
+            </div>
+        </div>
+    </form>
+</div>

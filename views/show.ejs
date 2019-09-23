@@ -27,6 +27,7 @@
             </h5>
         </div>
     </div>
+
     <div class="row">
         <div class="col">
             <p>Notes: <%= customer.notes %></p>
@@ -34,7 +35,143 @@
     </div>
 
     <hr>
-    <h2>Layout Info:</h2>
+    <div style="padding-bottom: 40px;">
+        <hr>
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleForwardPitch"
+                        name="layout[middleForwardPitch]"></textarea>
+                </div>
+            </div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringForwardPitch" name="layout[ringForwardPitch]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleSidePitchL" name="layout[middleSidePitchL]"></textarea>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row float-center square-lg">
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="middleSidePitchR"
+                            name="layout[middleSidePitchR]"></textarea>
+                    </div>
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="ringSidePitchL" name="layout[ringSidePitchL]"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringSidePitchR" name="layout[ringSidePitchR]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row square-group">
+            <div class="col-4">
+                <div class="float-right square">
+                    <textarea class="pitchTextArea" id="middleReversePitch"
+                        name="layout[middleReversePitch]"></textarea>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="row float-center square-lg">
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="middleHoleSize" name="layout[middleHoleSize]"></textarea>
+                    </div>
+                    <div class="col mpzero">
+                        <textarea class="pitchTextArea" id="ringHoleSize" name="layout[ringHoleSize]"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="float-left square">
+                    <textarea class="pitchTextArea" id="ringReversePitch" name="layout[ringReversePitch]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row square-group ">
+            <div class="col d-flex justify-content-center">
+                <div class="square">
+                    <textarea class="pitchTextArea" id="middleActual" name="layout[middleActual]"></textarea>
+                    <label for="middleActual">Actual</label>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="middleCut" name="layout[middleCut]"></textarea>
+                    <label for="middleActual">Cut</label>
+                </div>
+                <div class="square"></div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="ringActual" name="layout[ringActual]"></textarea>
+                    <label for="middleActual">Actual</label>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="ringCut" name="layout[ringCut]"></textarea>
+                    <label for="middleActual">Cut</label>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="form-row square-group">
+            <div class="col">
+                <div class="float-center square">
+                    <textarea class="pitchTextArea" id="thumbForwardPitch" name="layout[thumbForwardPitch]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row square-group">
+            <div class="col d-flex justify-content-center">
+                <div class="square">
+                    <textarea class="pitchTextArea" id="thumbSidePitchL" name="layout[thumbSidePitchL]"></textarea>
+                </div>
+                <div class="square thumbSpace">
+                    <textarea class="pitchTextArea" id="ovalAngle" name="layout[ovalAngle]"></textarea>
+                </div>
+                <div class="square">
+                    <textarea class="pitchTextArea" id="thumbSidePitchR" name="layout[thumbSidePitchR]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row square-group" style="padding-bottom: 20px;">
+            <div class="col">
+                <div class="float-center square">
+                    <textarea class="pitchTextArea" id="thumbReversePitch" name="layout[thumbReversePitch]"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-6">
+                <label for="middleInsertSize">Middle Insert Size:</label>
+                <input type="text" class="form-control" id="middleInsertSize" name="layout[middleInsertSize]">
+
+                <label for="ringInsertSize">Ring Insert Size:</label>
+                <input type="text" class="form-control" id="ringInsertSize" name="layout[ringInsertSize]">
+
+                <label for="bridgeSpacing">Bridge Spacing:</label>
+                <input type="text" class="form-control" id="bridgeSpacing" name="layout[bridgeSpacing]">
+            </div>
+            <div class="col-6">
+                <textarea class="form-control" id="notes" name="customer[notes]" id="notes" cols="30" rows="10"
+                    placeholder="Notes" style="resize: none"></textarea>
+            </div>
+        </div>
+
+        <!-- <h2>Layout Info:</h2>
     <p>Ball Name: <%= customer.ballLayouts[0].ballName %></p>
     <p>Middle Forward Pitch: <%= customer.ballLayouts[0].middleForwardPitch %></p>
     <p>Middle Side Pitch L: <%= customer.ballLayouts[0].middleSidePitchL %></p>
@@ -57,5 +194,6 @@
     <p>Thumb Reverse Pitch: <%= customer.ballLayouts[0].thumbReversePitch %></p>
     <p>Thumb Side Pitch L: <%= customer.ballLayouts[0].thumbSidePitchL %></p>
     <p>Thumb Side Pitch R: <%= customer.ballLayouts[0].thumbSidePitchR %></p>
-    <p>Oval Angle: <%= customer.ballLayouts[0].ovalAngle %></p>
+    <p>Oval Angle: <%= customer.ballLayouts[0].ovalAngle %></p> -->
+    </div>
 </div>
