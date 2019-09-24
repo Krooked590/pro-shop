@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="/styles/show.css">
 
 <div>
+    <form action="/customer" method="POST">
+
+    </form>
     <div class="row">
         <div class="col pageHeader">
             <h1><%= customer.contactInfo.firstName %> <%= customer.contactInfo.lastName %></h1>
@@ -9,7 +12,7 @@
                     onclick="get('customers/<%= customer.id %>/edit')"><i class="material-icons">edit</i></button>
                 <form id="deleteForm" method="POST" action="/customers/<%= customer.id %>?_method=DELETE"
                     style="display: inline">
-                    <button type="button" class="btn btn-danger someSpace"
+                    <button form="deleteForm" type="button" class="btn btn-danger someSpace"
                         onclick="confirmDelete(document.getElementById('deleteForm'))"><i
                             class="material-icons">delete_forever</i></button>
                 </form>
@@ -28,26 +31,20 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            <p>Notes: <%= customer.notes %></p>
-        </div>
-    </div>
-
     <hr>
     <div style="padding-bottom: 40px;">
-        <hr>
+        <!-- <hr> -->
         <div class="form-row square-group">
             <div class="col-4">
                 <div class="float-right square">
                     <textarea class="pitchTextArea" id="middleForwardPitch"
-                        name="layout[middleForwardPitch]"></textarea>
+                        name="layout[middleForwardPitch]"><%= customer.ballLayouts[0].middleForwardPitch %></textarea>
                 </div>
             </div>
             <div class="col-4"></div>
             <div class="col-4">
                 <div class="float-left square">
-                    <textarea class="pitchTextArea" id="ringForwardPitch" name="layout[ringForwardPitch]"></textarea>
+                    <textarea class="pitchTextArea" id="ringForwardPitch" name="layout[ringForwardPitch]"><%= customer.ballLayouts[0].ringForwardPitch %></textarea>
                 </div>
             </div>
         </div>
@@ -55,23 +52,23 @@
         <div class="form-row square-group">
             <div class="col-4">
                 <div class="float-right square">
-                    <textarea class="pitchTextArea" id="middleSidePitchL" name="layout[middleSidePitchL]"></textarea>
+                    <textarea class="pitchTextArea" id="middleSidePitchL" name="layout[middleSidePitchL]"><%= customer.ballLayouts[0].middleSidePitchL %></textarea>
                 </div>
             </div>
             <div class="col-4">
                 <div class="row float-center square-lg">
                     <div class="col mpzero">
                         <textarea class="pitchTextArea" id="middleSidePitchR"
-                            name="layout[middleSidePitchR]"></textarea>
+                            name="layout[middleSidePitchR]"><%= customer.ballLayouts[0].middleSidePitchR %></textarea>
                     </div>
                     <div class="col mpzero">
-                        <textarea class="pitchTextArea" id="ringSidePitchL" name="layout[ringSidePitchL]"></textarea>
+                        <textarea class="pitchTextArea" id="ringSidePitchL" name="layout[ringSidePitchL]"><%= customer.ballLayouts[0].ringSidePitchL %></textarea>
                     </div>
                 </div>
             </div>
             <div class="col-4">
                 <div class="float-left square">
-                    <textarea class="pitchTextArea" id="ringSidePitchR" name="layout[ringSidePitchR]"></textarea>
+                    <textarea class="pitchTextArea" id="ringSidePitchR" name="layout[ringSidePitchR]"><%= customer.ballLayouts[0].ringSidePitchR %></textarea>
                 </div>
             </div>
         </div>
@@ -80,22 +77,22 @@
             <div class="col-4">
                 <div class="float-right square">
                     <textarea class="pitchTextArea" id="middleReversePitch"
-                        name="layout[middleReversePitch]"></textarea>
+                        name="layout[middleReversePitch]"><%= customer.ballLayouts[0].middleReversePitch %></textarea>
                 </div>
             </div>
             <div class="col-4">
                 <div class="row float-center square-lg">
                     <div class="col mpzero">
-                        <textarea class="pitchTextArea" id="middleHoleSize" name="layout[middleHoleSize]"></textarea>
+                        <textarea class="pitchTextArea" id="middleHoleSize" name="layout[middleHoleSize]"><%= customer.ballLayouts[0].middleHoleSize %></textarea>
                     </div>
                     <div class="col mpzero">
-                        <textarea class="pitchTextArea" id="ringHoleSize" name="layout[ringHoleSize]"></textarea>
+                        <textarea class="pitchTextArea" id="ringHoleSize" name="layout[ringHoleSize]"><%= customer.ballLayouts[0].ringHoleSize %></textarea>
                     </div>
                 </div>
             </div>
             <div class="col-4">
                 <div class="float-left square">
-                    <textarea class="pitchTextArea" id="ringReversePitch" name="layout[ringReversePitch]"></textarea>
+                    <textarea class="pitchTextArea" id="ringReversePitch" name="layout[ringReversePitch]"><%= customer.ballLayouts[0].ringReversePitch %></textarea>
                 </div>
             </div>
         </div>
@@ -103,20 +100,20 @@
         <div class="form-row square-group ">
             <div class="col d-flex justify-content-center">
                 <div class="square">
-                    <textarea class="pitchTextArea" id="middleActual" name="layout[middleActual]"></textarea>
+                    <textarea class="pitchTextArea" id="middleActual" name="layout[middleActual]"><%= customer.ballLayouts[0].middleActual %></textarea>
                     <label for="middleActual">Actual</label>
                 </div>
                 <div class="square">
-                    <textarea class="pitchTextArea" id="middleCut" name="layout[middleCut]"></textarea>
+                    <textarea class="pitchTextArea" id="middleCut" name="layout[middleCut]"><%= customer.ballLayouts[0].middleCut %></textarea>
                     <label for="middleActual">Cut</label>
                 </div>
                 <div class="square"></div>
                 <div class="square">
-                    <textarea class="pitchTextArea" id="ringActual" name="layout[ringActual]"></textarea>
+                    <textarea class="pitchTextArea" id="ringActual" name="layout[ringActual]"><%= customer.ballLayouts[0].ringActual %></textarea>
                     <label for="middleActual">Actual</label>
                 </div>
                 <div class="square">
-                    <textarea class="pitchTextArea" id="ringCut" name="layout[ringCut]"></textarea>
+                    <textarea class="pitchTextArea" id="ringCut" name="layout[ringCut]"><%= customer.ballLayouts[0].ringCut %></textarea>
                     <label for="middleActual">Cut</label>
                 </div>
             </div>
@@ -127,7 +124,7 @@
         <div class="form-row square-group">
             <div class="col">
                 <div class="float-center square">
-                    <textarea class="pitchTextArea" id="thumbForwardPitch" name="layout[thumbForwardPitch]"></textarea>
+                    <textarea class="pitchTextArea" id="thumbForwardPitch" name="layout[thumbForwardPitch]"><%= customer.ballLayouts[0].thumbForwardPitch %></textarea>
                 </div>
             </div>
         </div>
@@ -135,13 +132,13 @@
         <div class="form-row square-group">
             <div class="col d-flex justify-content-center">
                 <div class="square">
-                    <textarea class="pitchTextArea" id="thumbSidePitchL" name="layout[thumbSidePitchL]"></textarea>
+                    <textarea class="pitchTextArea" id="thumbSidePitchL" name="layout[thumbSidePitchL]"><%= customer.ballLayouts[0].thumbSidePitchL %></textarea>
                 </div>
                 <div class="square thumbSpace">
-                    <textarea class="pitchTextArea" id="ovalAngle" name="layout[ovalAngle]"></textarea>
+                    <textarea class="pitchTextArea" id="ovalAngle" name="layout[ovalAngle]"><%= customer.ballLayouts[0].ovalAngle %></textarea>
                 </div>
                 <div class="square">
-                    <textarea class="pitchTextArea" id="thumbSidePitchR" name="layout[thumbSidePitchR]"></textarea>
+                    <textarea class="pitchTextArea" id="thumbSidePitchR" name="layout[thumbSidePitchR]"><%= customer.ballLayouts[0].thumbSidePitchR %></textarea>
                 </div>
             </div>
         </div>
@@ -149,7 +146,7 @@
         <div class="form-row square-group" style="padding-bottom: 20px;">
             <div class="col">
                 <div class="float-center square">
-                    <textarea class="pitchTextArea" id="thumbReversePitch" name="layout[thumbReversePitch]"></textarea>
+                    <textarea class="pitchTextArea" id="thumbReversePitch" name="layout[thumbReversePitch]"><%= customer.ballLayouts[0].thumbReversePitch %></textarea>
                 </div>
             </div>
         </div>
@@ -157,17 +154,17 @@
         <div class="form-row">
             <div class="form-group col-6">
                 <label for="middleInsertSize">Middle Insert Size:</label>
-                <input type="text" class="form-control" id="middleInsertSize" name="layout[middleInsertSize]">
+                <input type="text" class="form-control" id="middleInsertSize" name="layout[middleInsertSize]" value="<%= customer.ballLayouts[0].middleInsertSize %>">
 
                 <label for="ringInsertSize">Ring Insert Size:</label>
-                <input type="text" class="form-control" id="ringInsertSize" name="layout[ringInsertSize]">
+                <input type="text" class="form-control" id="ringInsertSize" name="layout[ringInsertSize]" value="<%= customer.ballLayouts[0].ringInsertSize %>">
 
                 <label for="bridgeSpacing">Bridge Spacing:</label>
-                <input type="text" class="form-control" id="bridgeSpacing" name="layout[bridgeSpacing]">
+                <input type="text" class="form-control" id="bridgeSpacing" name="layout[bridgeSpacing]" value="<%= customer.ballLayouts[0].bridgeSpacing %>">
             </div>
             <div class="col-6">
                 <textarea class="form-control" id="notes" name="customer[notes]" id="notes" cols="30" rows="10"
-                    placeholder="Notes" style="resize: none"></textarea>
+                    placeholder="Notes" style="resize: none"><%= customer.notes %></textarea>
             </div>
         </div>
 
