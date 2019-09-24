@@ -37,15 +37,44 @@ function post(form) {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
             // Send token to backend and load response
             // console.log(idToken);
-            $(form).find('input[required]').each((index, element) => {
-                if (!$(element).val()) {
-                    console.log("EMPTY!!!!!");
+            let $form = $(form);
+            let valid = true;
+
+            //if we came from show page
+            $form.find("#firstName, #lastName, #phoneNumber, #email").each((index, element) => { 
+                let $element = $(element);
+                if (element.id === "firstName") {
+                    $form.find("#hiddenFirst").eq(0).val($element.text());
+                } else if (element.id === "lastName") {
+                    $form.find("#hiddenLast").eq(0).val($element.text());
+                } else if (element.id === "phoneNumber") {
+                    $form.find("#hiddenPhone").eq(0).val($element.text());
+                } else if (element.id === "email") {
+                    $form.find("#hiddenEmail").eq(0).val($element.text());
                 }
             });
-            let formData = $(form).serialize();
+
+            $form.find("input, textarea").each((index, element) => {
+                let $element = $(element);
+                if ($element.prop('required') && !$element.val()) {
+                    valid = false;
+                } else if (!$element.val()) {
+                    let name = $element.attr("name");
+                    if (name.includes("layout")) {
+                        $element.val("0");
+                    }
+                }
+            });
+
+            if (!valid) {
+                alert("please fill out the required fields");
+                return;
+            }
+
+            let formData = $form.serialize();
             $.ajax({
                 type: 'POST',
-                url: $(form).attr('action'),
+                url: $form.attr('action'),
                 data: formData,
                 headers: { "Authorization": idToken },
                 success: (response) => {

@@ -15,7 +15,7 @@
 </div>
 <!-- <button onclick="get('customers')">Home</button> -->
 <div style="padding-bottom: 40px;">
-    <form id="createForm" action="/customers" method="POST">
+    <form id="createForm" action="/customers/<%= customer.id %>?_method=PUT" method="POST">
         <div class="form-row">
             <div class="form-group col">
                 <label for="firstName">First Name:</label>
