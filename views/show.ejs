@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="/styles/show.css">
 <form id="deleteForm" method="POST" action="/customers/<%= customer.id %>?_method=DELETE" hidden></form>
-
 <div>
     <form id="editForm" action="/customers/<%= customer.id %>?_method=PUT" method="POST">
         <input id="hiddenFirst" type="text" name="customer[firstName]" hidden required>

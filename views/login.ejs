@@ -1,65 +1,63 @@
 <% include ./partials/header %>
-<div class="container">
-    <div id="content">
-        <p>Login Page</p>
-        <button onclick="signIn()">LOGIN!</button>
-        <!-- <button onclick="test()">TEST!</button> -->
-        <script type="text/javascript">
-            /**
-             * Function called when clicking the Login/Logout button.
-             */
-            function signIn() {
-                if (!firebase.auth().currentUser) {
-                    var provider = new firebase.auth.GoogleAuthProvider();
-                    provider.addScope('https://www.googleapis.com/auth/plus.login');
-                    firebase.auth().signInWithRedirect(provider);
+<div id="content">
+    <p>Login Page</p>
+    <button onclick="signIn()">LOGIN!</button>
+    <!-- <button onclick="test()">TEST!</button> -->
+    <script type="text/javascript">
+        /**
+         * Function called when clicking the Login/Logout button.
+         */
+        function signIn() {
+            if (!firebase.auth().currentUser) {
+                var provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('https://www.googleapis.com/auth/plus.login');
+                firebase.auth().signInWithRedirect(provider);
+            }
+        }
+
+        function signOut() {
+            if (firebase.auth().currentUser) {
+                firebase.auth().signOut();
+                window.location = "/login";
+            }
+        }
+
+        function initApp() {
+            // Result from Redirect auth flow.
+            firebase.auth().getRedirectResult().then(function (result) {
+                if (result.credential) {
+                    //signed in
+                    console.log("User signed in");
+                    // var token = result.credential.accessToken;
+                } else {
+                    //signed out
+                    // console.log("User signed out");
                 }
-            }
 
-            function signOut() {
-                if (firebase.auth().currentUser) {
-                    firebase.auth().signOut();
-                    window.location = "/login";
+                // var user = result.user;
+            }).catch(function (error) {
+                var errorCode = error.code;
+                if (errorCode === 'auth/account-exists-with-different-credential') {
+                    alert('You have already signed up with a different auth provider for that email.');
+                    // If you are using multiple auth providers on your app you should handle linking
+                    // the user's accounts here.
+                } else {
+                    console.error(error);
                 }
-            }
-
-            function initApp() {
-                // Result from Redirect auth flow.
-                firebase.auth().getRedirectResult().then(function (result) {
-                    if (result.credential) {
-                        //signed in
-                        console.log("User signed in");
-                        // var token = result.credential.accessToken;
-                    } else {
-                        //signed out
-                        // console.log("User signed out");
-                    }
-
-                    // var user = result.user;
-                }).catch(function (error) {
-                    var errorCode = error.code;
-                    if (errorCode === 'auth/account-exists-with-different-credential') {
-                        alert('You have already signed up with a different auth provider for that email.');
-                        // If you are using multiple auth providers on your app you should handle linking
-                        // the user's accounts here.
-                    } else {
-                        console.error(error);
-                    }
-                });
-                // Listening for auth state changes.
-                firebase.auth().onAuthStateChanged(function (user) {
-                    if (user) {
-                        console.log("state change - logged in");
-                        get("customers");
-                    } else {
-                        console.log("state change - logged out");
-                    }
-                });
-            }
-            window.onload = function () {
-                initApp();
-            };
-        </script>
-    </div>
+            });
+            // Listening for auth state changes.
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (user) {
+                    console.log("state change - logged in");
+                    get("customers");
+                } else {
+                    console.log("state change - logged out");
+                }
+            });
+        }
+        window.onload = function () {
+            initApp();
+        };
+    </script>
 </div>
 <% include ./partials/footer %>

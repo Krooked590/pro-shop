@@ -39,9 +39,11 @@ function post(form) {
             // console.log(idToken);
             let $form = $(form);
             let valid = true;
+            let edit = false;
 
             //if we came from show page
             $form.find("#firstName, #lastName, #phoneNumber, #email").each((index, element) => { 
+                edit = true;
                 let $element = $(element);
                 if (element.id === "firstName") {
                     $form.find("#hiddenFirst").eq(0).val($element.text());
@@ -80,6 +82,9 @@ function post(form) {
                 success: (response) => {
                     // console.log("success - " + response);
                     get('customers' + response);
+                    if (edit) {
+                        showAlert(document.getElementById("alertSuccess"));
+                    }
                 },
                 error: function () {
                     alert("Error");

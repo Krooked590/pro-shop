@@ -68,3 +68,16 @@
             </div>
         </div>
     </nav>
+    <div class="container">
+        <div id="alertSuccess" class="alert alert-success" role="alert">
+            Successfully saved changes!
+            <button type="button" class="close" aria-label="Close" onclick="closeAlert(this.parentNode)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div id="alertError" class="alert alert-danger" role="alert">
+            Error saving changes
+            <button type="button" class="close" aria-label="Close" onclick="closeAlert(this.parentNode)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>

@@ -1,2 +1,17 @@
+</div>
+<script>
+    $().ready(function() {
+        $("#alertSuccess").hide();
+        $("#alertError").hide();
+    });
+
+    function showAlert(alert) {
+        $(alert).show();
+    }
+
+    function closeAlert(alert) {
+        $(alert).hide();
+    }
+</script>
 </body>
 </html>
