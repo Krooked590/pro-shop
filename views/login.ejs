@@ -1,9 +1,9 @@
 <% include ./partials/header %>
 <div id="content">
     <p>Login Page</p>
-    <button onclick="signIn()">LOGIN!</button>
+    <button class="btn btn-primary" onclick="signIn()">LOGIN!</button>
     <!-- <button onclick="test()">TEST!</button> -->
-    <script type="text/javascript">
+    <script>
         /**
          * Function called when clicking the Login/Logout button.
          */
@@ -24,18 +24,20 @@
 
         function initApp() {
             // Result from Redirect auth flow.
-            firebase.auth().getRedirectResult().then(function (result) {
-                if (result.credential) {
-                    //signed in
-                    console.log("User signed in");
-                    // var token = result.credential.accessToken;
-                } else {
-                    //signed out
-                    // console.log("User signed out");
-                }
+            firebase.auth().getRedirectResult()
+            // .then(function (result) {
+            //     if (result.credential) {
+            //         //signed in
+            //         console.log("User signed in");
+            //         // var token = result.credential.accessToken;
+            //     } else {
+            //         //signed out
+            //         console.log("User signed out");
+            //     }
 
-                // var user = result.user;
-            }).catch(function (error) {
+            //     // var user = result.user;
+            // })
+            .catch(function (error) {
                 var errorCode = error.code;
                 if (errorCode === 'auth/account-exists-with-different-credential') {
                     alert('You have already signed up with a different auth provider for that email.');
@@ -45,6 +47,7 @@
                     console.error(error);
                 }
             });
+
             // Listening for auth state changes.
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
@@ -52,6 +55,7 @@
                     get("customers");
                 } else {
                     console.log("state change - logged out");
+                    //enable login button? not sure
                 }
             });
         }
