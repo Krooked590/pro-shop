@@ -1,7 +1,7 @@
 <% include ./partials/header %>
 <div id="content">
     <p>Login Page</p>
-    <button class="btn btn-primary" onclick="signIn()">LOGIN!</button>
+    <button id="loginButton" class="btn btn-primary" onclick="signIn()">LOGIN!</button>
     <!-- <button onclick="test()">TEST!</button> -->
     <script>
         /**
@@ -52,6 +52,9 @@
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
                     console.log("state change - logged in");
+                    var loginButton = document.getElementById("loginButton");
+                    loginButton.disabled = true;
+                    loginButton.innerText = "Logging In..."
                     get("customers");
                 } else {
                     console.log("state change - logged out");
