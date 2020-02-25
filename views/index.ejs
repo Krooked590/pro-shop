@@ -15,17 +15,17 @@
         <% if (customers.hasOwnProperty(key)) { %>
         <li class='list-group-item'>
             <div class='row'>
-                <div class='col' id='listItemName'>
-                    <%= customers[key].contactInfo.firstName %> <%= customers[key].contactInfo.lastName %>
+                <div class='col listItemName'>
+                    <%= customers[key].contactInfo.lastName %>, <%= customers[key].contactInfo.firstName %>
                 </div>
-                <div class='col' id='listItemPhone'>
+                <div class='col listItemPhone'>
                     <a
                         href="tel:<%= customers[key].contactInfo.phoneNumber %>"><%= customers[key].contactInfo.phoneNumber %></a>
                 </div>
-                <div class='col' id='listItemEmail'>
+                <div class='col listItemEmail'>
                     <a href="mailto:<%= customers[key].contactInfo.email %>"><%= customers[key].contactInfo.email %></a>
                 </div>
-                <div class='col' id='listItemButton'>
+                <div class='col listItemButton'>
                     <button type="button" class="btn btn-primary"
                         onclick="get('customers/<%= customers[key].id %>')">View</button>
                 </div>

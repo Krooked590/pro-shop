@@ -68,12 +68,22 @@ var auth = (req, res, next) => {
 };
 app.use(auth);
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     res.redirect('/customers');
 });
 
 app.get('/test', (req, res) => {
     res.send("test");
+});
+
+app.post('/testpost', (req, res) => {
+    let search = req.body.search.toLowerCase();
+    customers = customers.filter((value, index, arr) => { 
+        return value.contactInfo.firstName.toLowerCase() == search || value.contactInfo.lastName.toLowerCase() == search;
+    });
+
+    isDirty = false;
+    res.redirect('/customers');
 });
 
 app.get('/login', (req, res) => {
@@ -93,7 +103,7 @@ app.get('/customers', (req, res) => {
                     });
 
                     isDirty = true;
-                    customers.sort((a, b) => (a.contactInfo.firstName > b.contactInfo.firstName) ? 1 : -1);
+                    customers.sort((a, b) => (a.contactInfo.lastName > b.contactInfo.lastName) ? 1 : -1);
                     res.render('index', { customers: customers });
                 })
                 .catch((err) => {
@@ -105,14 +115,20 @@ app.get('/customers', (req, res) => {
             res.render('index', { customers: customers });
         }
     }
+    isDirty = true;
 });
+
+// app.get('/customers/filtered', (req, res) => { 
+//     res.render('index', { customers: customers });
+// });
 
 app.post('/customers', (req, res) => {
     if (!req.validated) res.redirect('/login');
     else {
         isDirty = true;
-
+        console.log(req.body);
         let customer = fillOutCustomerDetails(req.body);
+        customer.contactInfo.phoneNumber = removeNonDigits(customer.contactInfo.phoneNumber);
         let contactInfo = JSON.stringify(customer.contactInfo);
         let layouts = JSON.stringify(customer.ballLayouts);
         let docRef = col.doc();
@@ -124,7 +140,7 @@ app.post('/customers', (req, res) => {
             notes: customer.notes
         }).then(ref => {
             console.log('Created customer with id - ' + docRef.id);
-            res.send('/'+docRef.id);
+            res.send('/' + docRef.id);
         }).catch(err => {
             console.log('Error getting documents', err);
             res.status(404);
@@ -268,6 +284,11 @@ function fillOutCustomerDetails(data) {
     customer.ballLayouts[0].ovalAngle = data.layout.ovalAngle;
 
     return customer;
+}
+
+function removeNonDigits(str) {
+    str = str.replace(/\D/g, '');
+    return str;
 }
 
 // function populateCustomers() {
