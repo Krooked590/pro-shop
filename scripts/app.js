@@ -76,16 +76,6 @@ app.get('/test', (req, res) => {
     res.send("test");
 });
 
-app.post('/testpost', (req, res) => {
-    let search = req.body.search.toLowerCase();
-    customers = customers.filter((value, index, arr) => { 
-        return value.contactInfo.firstName.toLowerCase() == search || value.contactInfo.lastName.toLowerCase() == search;
-    });
-
-    isDirty = false;
-    res.redirect('/customers');
-});
-
 app.get('/login', (req, res) => {
     res.render('login');
 });
@@ -117,10 +107,6 @@ app.get('/customers', (req, res) => {
     }
     isDirty = true;
 });
-
-// app.get('/customers/filtered', (req, res) => { 
-//     res.render('index', { customers: customers });
-// });
 
 app.post('/customers', (req, res) => {
     if (!req.validated) res.redirect('/login');

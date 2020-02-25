@@ -1,17 +1,3 @@
-function searchCustomers() {
-    var search = document.getElementById("searchBox").value.toLowerCase();
-    var customersListItems = document.getElementsByClassName("listItemName");
-    for (var i = 0; i < customersListItems.length; i++) {
-        if (search == "") {
-            customersListItems[i].parentNode.parentNode.removeAttribute("hidden");
-        } else if (!customersListItems[i].innerText.toLowerCase().includes(search)) {
-            customersListItems[i].parentNode.parentNode.setAttribute("hidden", true);
-        } else {
-            customersListItems[i].parentNode.parentNode.removeAttribute("hidden");
-        }
-    }
-}
-
 function get(endpoint) {
     if (firebase.auth().currentUser) {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
@@ -111,5 +97,19 @@ function post(form) {
     } else {
         alert("Sorry something went wrong. You need to log in again to continue.");
         window.location = "/login";
+    }
+}
+
+function searchCustomers() {
+    var search = document.getElementById("searchBox").value.toLowerCase();
+    var customersListItems = document.getElementsByClassName("listItemName");
+    for (var i = 0; i < customersListItems.length; i++) {
+        if (search == "") {
+            customersListItems[i].parentNode.parentNode.removeAttribute("hidden");
+        } else if (!customersListItems[i].innerText.toLowerCase().includes(search)) {
+            customersListItems[i].parentNode.parentNode.setAttribute("hidden", true);
+        } else {
+            customersListItems[i].parentNode.parentNode.removeAttribute("hidden");
+        }
     }
 }
